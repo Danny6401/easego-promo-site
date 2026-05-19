@@ -1,12 +1,22 @@
+---
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
+		<link rel="icon" href={`${baseUrl}favicon.ico`} />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>海岬晨光民宿 | 台東海岸一頁式民宿介紹</title>
+		<meta
+			name="description"
+			content="海岬晨光民宿一頁式介紹網站，包含最新消息、關於我們、客房介紹、訂房資訊與民宿位置。"
+		/>
 	</head>
 	<body>
 		<slot />
@@ -18,6 +28,15 @@
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+		font-family:
+			Inter, "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system,
+			BlinkMacSystemFont, "Segoe UI", sans-serif;
+		background: #fbfaf7;
+		color: #202124;
+	}
+
+	* {
+		box-sizing: border-box;
 	}
 </style>

@@ -1,11 +1,829 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const navItems = [
+	{ label: "最新消息", href: "#news" },
+	{ label: "關於我們", href: "#about" },
+	{ label: "客房介紹", href: "#rooms" },
+	{ label: "訂房資訊", href: "#booking" },
+	{ label: "民宿位置", href: "#location" },
+];
+
+const slides = [
+	{
+		title: "醒在海風與晨光之間",
+		subtitle: "台東海岸線旁的靜謐民宿，步行 5 分鐘抵達海邊。",
+		image:
+			"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
+	},
+	{
+		title: "把日常留給山海",
+		subtitle: "庭院、露台與大片採光，適合慢旅行與家庭小聚。",
+		image:
+			"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1800&q=85",
+	},
+	{
+		title: "每一晚都安靜好眠",
+		subtitle: "精選寢具、獨立衛浴、在地早餐，讓旅程自然放鬆。",
+		image:
+			"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1800&q=85",
+	},
+];
+
+const rooms = [
+	{
+		name: "晨曦雙人房",
+		price: "平日 NT$3,200 起",
+		image:
+			"https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=900&q=80",
+		features: ["一大床", "海景陽台", "乾濕分離衛浴"],
+	},
+	{
+		name: "海風四人房",
+		price: "平日 NT$4,800 起",
+		image:
+			"https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=900&q=80",
+		features: ["兩張雙人床", "家庭客廳", "兒童備品"],
+	},
+	{
+		name: "星空包棟",
+		price: "平日 NT$16,800 起",
+		image:
+			"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80",
+		features: ["最多 14 人", "獨立廚房", "庭院烤肉區"],
+	},
+];
 ---
 
 <Layout>
-	<Welcome />
+	<header class="site-header">
+		<a class="brand" href="#top" aria-label="回到首頁">
+			<span class="brand-mark">海</span>
+			<span>海岬晨光民宿</span>
+		</a>
+		<nav class="main-nav" aria-label="主要導覽">
+			{navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+		</nav>
+	</header>
+
+	<main id="top">
+		<section class="hero" aria-label="民宿形象輪播">
+			<div class="hero-slider" data-slider>
+				{
+					slides.map((slide, index) => (
+						<article
+							class:list={["hero-slide", { active: index === 0 }]}
+							style={`background-image: linear-gradient(90deg, rgba(13, 31, 35, .74), rgba(13, 31, 35, .2)), url('${slide.image}')`}
+						>
+							<div class="hero-content">
+								<p class="eyebrow">Taitung Coast Stay</p>
+								<h1>{slide.title}</h1>
+								<p>{slide.subtitle}</p>
+								<a class="hero-action" href="#booking">查看訂房資訊</a>
+							</div>
+						</article>
+					))
+				}
+				<div class="slider-controls" aria-label="輪播控制">
+					<button type="button" data-prev aria-label="上一張">‹</button>
+					<div class="slider-dots">
+						{
+							slides.map((_, index) => (
+								<button
+									type="button"
+									class:list={{ active: index === 0 }}
+									data-dot={index}
+									aria-label={`切換到第 ${index + 1} 張`}
+								/>
+							))
+						}
+					</div>
+					<button type="button" data-next aria-label="下一張">›</button>
+				</div>
+			</div>
+		</section>
+
+		<aside class="sidebox" aria-label="快速訂房資訊">
+			<p class="sidebox-label">快速訂房</p>
+			<strong>今晚仍有空房</strong>
+			<span>入住前 7 日預訂享 95 折</span>
+			<a href="tel:+88689123456">089-123-456</a>
+			<a class="sidebox-button" href="#booking">看房價</a>
+		</aside>
+
+		<section id="news" class="section section-muted">
+			<div class="section-inner">
+				<div class="section-heading">
+					<p class="eyebrow">News</p>
+					<h2>最新消息</h2>
+				</div>
+				<div class="news-grid">
+					<article>
+						<time datetime="2026-06-01">2026.06.01</time>
+						<h3>夏季海岸假期開放預訂</h3>
+						<p>連住兩晚加贈在地早餐組，適用 6 月至 8 月平日入住。</p>
+					</article>
+					<article>
+						<time datetime="2026-05-20">2026.05.20</time>
+						<h3>包棟旅客可預約庭院晚餐</h3>
+						<p>提前 5 日預約即可安排私廚料理與海景露台座位。</p>
+					</article>
+					<article>
+						<time datetime="2026-05-05">2026.05.05</time>
+						<h3>新增車站接送服務</h3>
+						<p>台東車站至民宿單趟接送，請於訂房時一併告知班次。</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section id="about" class="section">
+			<div class="split-layout">
+				<div class="about-photo" aria-label="民宿公共空間照片"></div>
+				<div class="section-copy">
+					<p class="eyebrow">About</p>
+					<h2>關於我們</h2>
+					<p>
+						海岬晨光民宿位在台東東海岸安靜聚落，保留木作、庭院與大片窗景，
+						讓旅人用舒服的速度靠近山與海。主人長住在地，能協助安排秘境海灘、
+						部落餐桌、單車路線與親子友善行程。
+					</p>
+					<div class="stats">
+						<div><strong>5 min</strong><span>步行到海邊</span></div>
+						<div><strong>8 間</strong><span>精緻客房</span></div>
+						<div><strong>4.9</strong><span>旅客評分</span></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="rooms" class="section section-muted">
+			<div class="section-inner">
+				<div class="section-heading">
+					<p class="eyebrow">Rooms</p>
+					<h2>客房介紹</h2>
+				</div>
+				<div class="room-grid">
+					{
+						rooms.map((room) => (
+							<article class="room-card">
+								<img src={room.image} alt={`${room.name}空間照片`} loading="lazy" />
+								<div>
+									<h3>{room.name}</h3>
+									<p>{room.price}</p>
+									<ul>
+										{room.features.map((feature) => <li>{feature}</li>)}
+									</ul>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section id="booking" class="section">
+			<div class="booking-panel">
+				<div>
+					<p class="eyebrow">Booking</p>
+					<h2>訂房資訊</h2>
+					<p>
+						入住時間 15:00 後，退房時間 11:00 前。訂房保留需支付房價 30%
+						作為訂金，連續假期與包棟方案請來電確認。
+					</p>
+				</div>
+				<div class="booking-list">
+					<div><span>平日</span><strong>週日至週四</strong></div>
+					<div><span>假日</span><strong>週五、週六與國定假日</strong></div>
+					<div><span>付款</span><strong>轉帳、信用卡、現金</strong></div>
+					<div><span>聯絡</span><strong>089-123-456 / Line @capehome</strong></div>
+				</div>
+			</div>
+		</section>
+
+		<section id="location" class="section section-location">
+			<div class="location-content">
+				<div>
+					<p class="eyebrow">Location</p>
+					<h2>民宿位置</h2>
+					<p>台東縣成功鎮海岸路 88 號，鄰近三仙台與都歷海灘。</p>
+					<p>自行開車可停放於民宿前庭；搭乘大眾運輸可至台東車站轉乘海線客運。</p>
+				</div>
+				<div class="map-card" aria-label="民宿位置示意地圖">
+					<span>台東海岸</span>
+					<strong>海岬晨光民宿</strong>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<span>© 2026 海岬晨光民宿</span>
+		<span>台東縣成功鎮海岸路 88 號</span>
+	</footer>
 </Layout>
+
+<script>
+	const slider = document.querySelector("[data-slider]");
+
+	if (slider) {
+		const slides = Array.from(slider.querySelectorAll(".hero-slide"));
+		const dots = Array.from(slider.querySelectorAll("[data-dot]"));
+		const prev = slider.querySelector("[data-prev]");
+		const next = slider.querySelector("[data-next]");
+		let current = 0;
+		let timer;
+
+		const showSlide = (target) => {
+			current = (target + slides.length) % slides.length;
+			slides.forEach((slide, index) => slide.classList.toggle("active", index === current));
+			dots.forEach((dot, index) => dot.classList.toggle("active", index === current));
+		};
+
+		const start = () => {
+			timer = window.setInterval(() => showSlide(current + 1), 5200);
+		};
+
+		const restart = () => {
+			window.clearInterval(timer);
+			start();
+		};
+
+		prev?.addEventListener("click", () => {
+			showSlide(current - 1);
+			restart();
+		});
+
+		next?.addEventListener("click", () => {
+			showSlide(current + 1);
+			restart();
+		});
+
+		dots.forEach((dot, index) => {
+			dot.addEventListener("click", () => {
+				showSlide(index);
+				restart();
+			});
+		});
+
+		start();
+	}
+</script>
+
+<style>
+	:global(html) {
+		scroll-behavior: smooth;
+		scroll-padding-top: 86px;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.site-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 18px clamp(20px, 5vw, 72px);
+		background: rgba(251, 250, 247, 0.92);
+		border-bottom: 1px solid rgba(35, 46, 44, 0.1);
+		backdrop-filter: blur(18px);
+	}
+
+	.brand,
+	.main-nav {
+		display: flex;
+		align-items: center;
+	}
+
+	.brand {
+		gap: 10px;
+		font-weight: 800;
+		color: #193b37;
+	}
+
+	.brand-mark {
+		display: grid;
+		width: 36px;
+		height: 36px;
+		place-items: center;
+		border-radius: 50%;
+		background: #d86f45;
+		color: #fff;
+	}
+
+	.main-nav {
+		gap: clamp(14px, 2.4vw, 34px);
+		font-size: 15px;
+		font-weight: 700;
+		color: #2c4843;
+	}
+
+	.main-nav a {
+		padding: 8px 0;
+		border-bottom: 2px solid transparent;
+	}
+
+	.main-nav a:hover {
+		border-color: #d86f45;
+	}
+
+	.hero {
+		min-height: 100vh;
+		background: #193b37;
+	}
+
+	.hero-slider,
+	.hero-slide {
+		position: relative;
+		min-height: 100vh;
+	}
+
+	.hero-slide {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		padding: 120px clamp(24px, 7vw, 110px) 86px;
+		background-position: center;
+		background-size: cover;
+		opacity: 0;
+		transition: opacity 700ms ease;
+	}
+
+	.hero-slide.active {
+		opacity: 1;
+	}
+
+	.hero-content {
+		max-width: 720px;
+		color: #fff;
+	}
+
+	.eyebrow {
+		margin: 0 0 12px;
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	.hero-content .eyebrow {
+		color: #f5c16b;
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin-top: 0;
+	}
+
+	h1 {
+		max-width: 780px;
+		margin-bottom: 22px;
+		font-size: clamp(48px, 6vw, 88px);
+		line-height: 1.06;
+		letter-spacing: 0;
+	}
+
+	h2 {
+		margin-bottom: 18px;
+		color: #183b37;
+		font-size: clamp(32px, 4vw, 52px);
+		line-height: 1.12;
+		letter-spacing: 0;
+	}
+
+	h3 {
+		color: #183b37;
+		font-size: 22px;
+	}
+
+	.hero-content p:not(.eyebrow) {
+		max-width: 580px;
+		margin-bottom: 30px;
+		font-size: 20px;
+		line-height: 1.8;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.hero-action,
+	.sidebox-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 46px;
+		padding: 0 22px;
+		border-radius: 4px;
+		background: #d86f45;
+		color: #fff;
+		font-weight: 800;
+	}
+
+	.slider-controls {
+		position: absolute;
+		right: clamp(24px, 7vw, 110px);
+		bottom: 34px;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		gap: 18px;
+	}
+
+	.slider-controls button {
+		cursor: pointer;
+	}
+
+	.slider-controls > button {
+		width: 42px;
+		height: 42px;
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.15);
+		color: #fff;
+		font-size: 28px;
+		line-height: 1;
+	}
+
+	.slider-dots {
+		display: flex;
+		gap: 8px;
+	}
+
+	.slider-dots button {
+		width: 32px;
+		height: 4px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.45);
+	}
+
+	.slider-dots button.active {
+		background: #fff;
+	}
+
+	.sidebox {
+		position: fixed;
+		right: 24px;
+		top: 50%;
+		z-index: 15;
+		display: grid;
+		width: 214px;
+		gap: 10px;
+		padding: 20px;
+		border: 1px solid rgba(24, 59, 55, 0.14);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.94);
+		box-shadow: 0 18px 50px rgba(22, 35, 33, 0.18);
+		transform: translateY(-50%);
+	}
+
+	.sidebox-label {
+		margin: 0;
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+	}
+
+	.sidebox strong {
+		color: #183b37;
+		font-size: 20px;
+		line-height: 1.35;
+	}
+
+	.sidebox span {
+		color: #60706c;
+		font-size: 14px;
+		line-height: 1.55;
+	}
+
+	.sidebox a:not(.sidebox-button) {
+		color: #183b37;
+		font-weight: 900;
+	}
+
+	.section {
+		padding: 96px clamp(24px, 7vw, 110px);
+	}
+
+	.section-muted {
+		background: #f2eee7;
+	}
+
+	.section-inner {
+		max-width: 1160px;
+		margin: 0 auto;
+	}
+
+	.section-heading {
+		max-width: 680px;
+		margin-bottom: 34px;
+	}
+
+	.news-grid,
+	.room-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 22px;
+	}
+
+	.news-grid article,
+	.room-card,
+	.booking-panel {
+		border: 1px solid rgba(24, 59, 55, 0.1);
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+	}
+
+	.news-grid article {
+		padding: 28px;
+	}
+
+	time {
+		display: inline-block;
+		margin-bottom: 18px;
+		color: #d86f45;
+		font-size: 14px;
+		font-weight: 900;
+	}
+
+	.news-grid p,
+	.section-copy p,
+	.booking-panel p,
+	.location-content p,
+	.room-card p {
+		color: #5d6d69;
+		line-height: 1.8;
+	}
+
+	.split-layout,
+	.location-content,
+	.booking-panel {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+		gap: clamp(32px, 6vw, 76px);
+		max-width: 1160px;
+		margin: 0 auto;
+		align-items: center;
+	}
+
+	.about-photo {
+		min-height: 520px;
+		border-radius: 8px;
+		background:
+			linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)),
+			url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=80")
+				center / cover;
+	}
+
+	.section-copy {
+		max-width: 530px;
+	}
+
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 14px;
+		margin-top: 32px;
+	}
+
+	.stats div {
+		padding: 18px;
+		border-left: 4px solid #d86f45;
+		background: #f5f1ea;
+	}
+
+	.stats strong,
+	.stats span {
+		display: block;
+	}
+
+	.stats strong {
+		color: #183b37;
+		font-size: 28px;
+	}
+
+	.stats span {
+		margin-top: 4px;
+		color: #60706c;
+		font-size: 14px;
+	}
+
+	.room-card {
+		overflow: hidden;
+	}
+
+	.room-card img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.room-card div {
+		padding: 24px;
+	}
+
+	.room-card ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 18px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.room-card li {
+		padding: 7px 10px;
+		border-radius: 999px;
+		background: #eef3ef;
+		color: #2f5750;
+		font-size: 13px;
+		font-weight: 800;
+	}
+
+	.booking-panel {
+		padding: clamp(28px, 5vw, 56px);
+		background:
+			linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+			url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80")
+				center / cover;
+	}
+
+	.booking-list {
+		display: grid;
+		gap: 12px;
+	}
+
+	.booking-list div {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 16px 0;
+		border-bottom: 1px solid rgba(24, 59, 55, 0.14);
+	}
+
+	.booking-list span {
+		color: #d86f45;
+		font-weight: 900;
+	}
+
+	.booking-list strong {
+		color: #183b37;
+		text-align: right;
+	}
+
+	.section-location {
+		background: #183b37;
+	}
+
+	.section-location h2,
+	.section-location p {
+		color: #fff;
+	}
+
+	.section-location p {
+		color: rgba(255, 255, 255, 0.78);
+	}
+
+	.map-card {
+		display: grid;
+		min-height: 360px;
+		place-items: center;
+		padding: 34px;
+		border-radius: 8px;
+		background:
+			linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)),
+			url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80")
+				center / cover;
+		color: #fff;
+		text-align: center;
+	}
+
+	.map-card span,
+	.map-card strong {
+		display: block;
+		padding: 8px 14px;
+		background: rgba(24, 59, 55, 0.78);
+	}
+
+	.map-card strong {
+		margin-top: 8px;
+		font-size: 26px;
+	}
+
+	.site-footer {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 28px clamp(24px, 7vw, 110px);
+		background: #102522;
+		color: rgba(255, 255, 255, 0.76);
+	}
+
+	@media (max-width: 980px) {
+		.site-header {
+			position: sticky;
+			flex-direction: column;
+			gap: 14px;
+			padding: 14px 18px;
+		}
+
+		.main-nav {
+			width: 100%;
+			justify-content: flex-start;
+			overflow-x: auto;
+			padding-bottom: 4px;
+			white-space: nowrap;
+		}
+
+		.hero,
+		.hero-slider,
+		.hero-slide {
+			min-height: 760px;
+		}
+
+		.hero-slide {
+			padding: 110px 24px 110px;
+		}
+
+		.sidebox {
+			top: auto;
+			right: 16px;
+			bottom: 16px;
+			left: 16px;
+			width: auto;
+			grid-template-columns: 1fr auto;
+			align-items: center;
+			transform: none;
+		}
+
+		.sidebox span,
+		.sidebox a:not(.sidebox-button) {
+			display: none;
+		}
+
+		.news-grid,
+		.room-grid,
+		.split-layout,
+		.location-content,
+		.booking-panel {
+			grid-template-columns: 1fr;
+		}
+
+		.about-photo {
+			min-height: 360px;
+		}
+
+		.site-footer {
+			flex-direction: column;
+			padding-bottom: 112px;
+		}
+	}
+
+	@media (max-width: 640px) {
+		h1 {
+			font-size: 42px;
+		}
+
+		h2 {
+			font-size: 34px;
+		}
+
+		.hero-content p:not(.eyebrow) {
+			font-size: 17px;
+		}
+
+		.slider-controls {
+			right: 24px;
+			left: 24px;
+			justify-content: space-between;
+		}
+
+		.section {
+			padding: 72px 20px;
+		}
+
+		.stats {
+			grid-template-columns: 1fr;
+		}
+
+		.booking-list div {
+			display: grid;
+			gap: 6px;
+		}
+
+		.booking-list strong {
+			text-align: left;
+		}
+	}
+</style>
