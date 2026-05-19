@@ -115,7 +115,12 @@ const bookingNotices = [
 			<span class="brand-mark">海</span>
 			<span>海岬晨光民宿</span>
 		</a>
-		<nav class="main-nav" aria-label="主要導覽">
+		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+		<nav id="main-nav" class="main-nav" aria-label="主要導覽">
 			{navItems.map((item) => <a href={item.href}>{item.label}</a>)}
 		</nav>
 	</header>
@@ -357,6 +362,22 @@ const bookingNotices = [
 <script>
 	const slider = document.querySelector("[data-slider]");
 
+	const navToggle = document.querySelector(".nav-toggle");
+	const mainNav = document.querySelector("#main-nav");
+
+	navToggle?.addEventListener("click", () => {
+		const isOpen = navToggle.getAttribute("aria-expanded") === "true";
+		navToggle.setAttribute("aria-expanded", String(!isOpen));
+		mainNav?.classList.toggle("open", !isOpen);
+	});
+
+	mainNav?.querySelectorAll("a").forEach((link) => {
+		link.addEventListener("click", () => {
+			navToggle?.setAttribute("aria-expanded", "false");
+			mainNav.classList.remove("open");
+		});
+	});
+
 	if (slider) {
 		const slides = Array.from(slider.querySelectorAll(".hero-slide"));
 		const dots = Array.from(slider.querySelectorAll("[data-dot]"));
@@ -489,6 +510,74 @@ const bookingNotices = [
 
 	.main-nav a:hover {
 		border-color: #d86f45;
+	}
+
+	.nav-toggle {
+		display: none;
+		position: relative;
+		width: 42px;
+		height: 42px;
+		place-items: center;
+		border: 1px solid rgba(24, 59, 55, 0.12);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.78);
+		box-shadow: 0 10px 26px rgba(22, 35, 33, 0.1);
+		backdrop-filter: blur(12px);
+		cursor: pointer;
+		transition:
+			background 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.nav-toggle span {
+		position: absolute;
+		left: 50%;
+		display: block;
+		width: 19px;
+		height: 2px;
+		border-radius: 999px;
+		background: #183b37;
+		transform: translateX(-50%);
+		transition:
+			top 180ms ease,
+			transform 180ms ease,
+			opacity 180ms ease;
+	}
+
+	.nav-toggle span:nth-child(1) {
+		top: 14px;
+	}
+
+	.nav-toggle span:nth-child(2) {
+		top: 20px;
+		width: 14px;
+	}
+
+	.nav-toggle span:nth-child(3) {
+		top: 26px;
+	}
+
+	.nav-toggle:hover,
+	.nav-toggle[aria-expanded="true"] {
+		background: rgba(255, 255, 255, 0.94);
+		border-color: rgba(24, 59, 55, 0.24);
+		box-shadow: 0 14px 32px rgba(22, 35, 33, 0.14);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+		top: 20px;
+		transform: translateX(-50%) rotate(45deg);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+		opacity: 0;
+		transform: translateX(-50%) scaleX(0);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+		top: 20px;
+		transform: translateX(-50%) rotate(-45deg);
 	}
 
 	.hero {
@@ -1257,6 +1346,53 @@ const bookingNotices = [
 	}
 
 	@media (max-width: 640px) {
+		.site-header {
+			position: fixed;
+			flex-direction: row;
+			gap: 12px;
+		}
+
+		.nav-toggle {
+			display: grid;
+		}
+
+		.main-nav {
+			position: absolute;
+			top: calc(100% + 8px);
+			right: 16px;
+			display: grid;
+			width: min(220px, calc(100vw - 32px));
+			gap: 0;
+			padding: 8px;
+			border: 1px solid rgba(24, 59, 55, 0.12);
+			border-radius: 8px;
+			background: rgba(255, 255, 255, 0.96);
+			box-shadow: 0 18px 42px rgba(22, 35, 33, 0.16);
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(-8px);
+			transition:
+				opacity 180ms ease,
+				transform 180ms ease;
+		}
+
+		.main-nav.open {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translateY(0);
+		}
+
+		.main-nav a {
+			padding: 12px 14px;
+			border-bottom: 0;
+			border-radius: 6px;
+		}
+
+		.main-nav a:hover {
+			background: #f2eee7;
+			border-color: transparent;
+		}
+
 		h1 {
 			font-size: 42px;
 		}
