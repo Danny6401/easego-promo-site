@@ -442,6 +442,7 @@ const bookingNotices = [
 		justify-content: space-between;
 		width: 100%;
 		padding: 18px clamp(20px, 5vw, 72px);
+		box-sizing: border-box;
 		background: rgba(251, 250, 247, 0.92);
 		border-bottom: 1px solid rgba(35, 46, 44, 0.1);
 		backdrop-filter: blur(18px);
@@ -454,6 +455,7 @@ const bookingNotices = [
 	}
 
 	.brand {
+		flex: 0 0 auto;
 		gap: 10px;
 		font-weight: 800;
 		color: #193b37;
@@ -470,7 +472,11 @@ const bookingNotices = [
 	}
 
 	.main-nav {
-		gap: clamp(14px, 2.4vw, 34px);
+		flex: 1 1 auto;
+		min-width: 0;
+		justify-content: flex-end;
+		flex-wrap: wrap;
+		gap: 10px clamp(12px, 2vw, 28px);
 		font-size: 15px;
 		font-weight: 700;
 		color: #2c4843;
@@ -1163,10 +1169,11 @@ const bookingNotices = [
 
 		.main-nav {
 			width: 100%;
-			justify-content: flex-start;
-			overflow-x: auto;
-			padding-bottom: 4px;
-			white-space: nowrap;
+			justify-content: center;
+			gap: 10px 18px;
+			overflow: visible;
+			padding-bottom: 0;
+			white-space: normal;
 		}
 
 		.hero,
@@ -1197,18 +1204,46 @@ const bookingNotices = [
 			width: min(176px, calc(100vw - 32px));
 		}
 
-		.news-grid,
-		.room-grid,
 		.split-layout,
 		.location-content,
 		.booking-panel {
 			grid-template-columns: 1fr;
 		}
 
+		.news-grid,
+		.room-grid {
+			display: flex;
+			gap: 18px;
+			overflow-x: auto;
+			padding: 4px 2px 24px;
+			scroll-snap-type: x proximity;
+			scrollbar-width: none;
+		}
+
+		.news-grid::-webkit-scrollbar,
+		.room-grid::-webkit-scrollbar {
+			display: none;
+		}
+
+		.news-grid article,
+		.room-grid .room-card {
+			flex: 0 0 min(82vw, 460px);
+			scroll-snap-align: start;
+		}
+
+		.room-card:hover {
+			box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+			transform: none;
+		}
+
+		.room-card:hover .room-image-slider img.active {
+			transform: none;
+		}
+
 		.room-grid:has(.room-card:nth-child(1):hover),
 		.room-grid:has(.room-card:nth-child(2):hover),
 		.room-grid:has(.room-card:nth-child(3):hover) {
-			grid-template-columns: 1fr;
+			grid-template-columns: none;
 		}
 
 		.about-photo {
@@ -1242,6 +1277,19 @@ const bookingNotices = [
 
 		.section {
 			padding: 72px 20px;
+		}
+
+		.news-grid,
+		.room-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			overflow: visible;
+			padding: 0;
+		}
+
+		.news-grid article,
+		.room-grid .room-card {
+			flex: none;
 		}
 
 		.stats {
