@@ -162,11 +162,21 @@ const bookingNotices = [
 			</div>
 		</section>
 
-		<aside class="sidebox" aria-label="快速訂房資訊">
-			<button class="sidebox-toggle" type="button" aria-label="開啟快速訂房">
+		<aside class="sidebox" data-sidebox aria-label="快速訂房資訊">
+			<button
+				class="sidebox-toggle"
+				type="button"
+				aria-label="開啟快速訂房"
+				aria-expanded="false"
+				data-sidebox-toggle
+			>
 				<span>快速訂房</span>
 			</button>
 			<div class="sidebox-panel">
+				<button class="sidebox-close" type="button" aria-label="關閉快速訂房" data-sidebox-close>
+					<span></span>
+					<span></span>
+				</button>
 				<div class="sidebox-section sidebox-reserve">
 					<p>快速訂房</p>
 					<a class="sidebox-button" href="#booking">Reserve</a>
@@ -331,9 +341,34 @@ const bookingNotices = [
 						<div><span>聯絡</span><strong>089-123-456 / Line @capehome</strong></div>
 					</div>
 				</div>
-				<ul class="booking-notices">
-					{bookingNotices.map((notice) => <li>{notice}</li>)}
-				</ul>
+				<div class="booking-notices-wrap" data-booking-notices>
+					<ul class="booking-notices">
+						{
+							bookingNotices.map((notice, index) => (
+								<li
+									class={index >= 4 ? "is-collapsed" : ""}
+									data-booking-notice-extra={index >= 4 ? "true" : undefined}
+								>
+									{notice}
+								</li>
+							))
+						}
+					</ul>
+					{
+						bookingNotices.length > 4 && (
+							<button
+								class="booking-toggle"
+								type="button"
+								data-booking-toggle
+								aria-expanded="false"
+								data-expand-label="查看更多"
+								data-collapse-label="收合"
+							>
+								<span>查看更多</span>
+							</button>
+						)
+					}
+				</div>
 			</div>
 		</section>
 
@@ -376,6 +411,62 @@ const bookingNotices = [
 			navToggle?.setAttribute("aria-expanded", "false");
 			mainNav.classList.remove("open");
 		});
+	});
+
+	const sidebox = document.querySelector("[data-sidebox]");
+	const sideboxToggle = sidebox?.querySelector("[data-sidebox-toggle]");
+	const sideboxClose = sidebox?.querySelector("[data-sidebox-close]");
+	const mobileSideboxQuery = window.matchMedia("(max-width: 980px)");
+
+	const setSideboxOpen = (isOpen) => {
+		sidebox?.classList.toggle("is-open", isOpen);
+		sideboxToggle?.setAttribute("aria-expanded", String(isOpen));
+	};
+
+	sideboxToggle?.addEventListener("click", (event) => {
+		if (!mobileSideboxQuery.matches) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		setSideboxOpen(!sidebox?.classList.contains("is-open"));
+	});
+
+	sideboxClose?.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		setSideboxOpen(false);
+		sideboxToggle?.focus();
+	});
+
+	document.addEventListener("click", (event) => {
+		if (!mobileSideboxQuery.matches || !sidebox?.classList.contains("is-open")) {
+			return;
+		}
+
+		if (event.target instanceof Node && sidebox.contains(event.target)) {
+			return;
+		}
+
+		setSideboxOpen(false);
+	});
+
+	sidebox?.querySelectorAll('a[href="#"]').forEach((link) => {
+		link.addEventListener("click", (event) => {
+			event.preventDefault();
+			setSideboxOpen(false);
+		});
+	});
+
+	sidebox?.querySelectorAll('a:not([href="#"])').forEach((link) => {
+		link.addEventListener("click", () => {
+			setSideboxOpen(false);
+		});
+	});
+
+	mobileSideboxQuery.addEventListener("change", () => {
+		setSideboxOpen(false);
 	});
 
 	if (slider) {
@@ -438,6 +529,32 @@ const bookingNotices = [
 		next?.addEventListener("click", () => showImage(current + 1));
 		dots.forEach((dot, index) => {
 			dot.addEventListener("click", () => showImage(index));
+		});
+	});
+
+	document.querySelectorAll("[data-booking-notices]").forEach((group) => {
+		const toggle = group.querySelector("[data-booking-toggle]");
+		const extraItems = Array.from(group.querySelectorAll("[data-booking-notice-extra]"));
+
+		if (!toggle || extraItems.length === 0) {
+			return;
+		}
+
+		const expandLabel = toggle.getAttribute("data-expand-label") ?? "展開更多規則";
+		const collapseLabel = toggle.getAttribute("data-collapse-label") ?? "收合規則";
+
+		toggle.addEventListener("click", () => {
+			const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+			const nextExpanded = !isExpanded;
+			const label = toggle.querySelector("span");
+
+			extraItems.forEach((item) => {
+				item.classList.toggle("is-collapsed", !nextExpanded);
+			});
+			toggle.setAttribute("aria-expanded", String(nextExpanded));
+			if (label) {
+				label.textContent = nextExpanded ? collapseLabel : expandLabel;
+			}
 		});
 	});
 </script>
@@ -733,7 +850,8 @@ const bookingNotices = [
 	}
 
 	.sidebox:hover,
-	.sidebox:focus-within {
+	.sidebox:focus-within,
+	.sidebox.is-open {
 		width: 176px;
 		filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
 	}
@@ -787,16 +905,22 @@ const bookingNotices = [
 	}
 
 	.sidebox:hover .sidebox-panel,
-	.sidebox:focus-within .sidebox-panel {
+	.sidebox:focus-within .sidebox-panel,
+	.sidebox.is-open .sidebox-panel {
 		opacity: 1;
 		pointer-events: auto;
 		transform: translate(0, 0) scale(1);
 	}
 
 	.sidebox:hover .sidebox-toggle,
-	.sidebox:focus-within .sidebox-toggle {
+	.sidebox:focus-within .sidebox-toggle,
+	.sidebox.is-open .sidebox-toggle {
 		opacity: 0;
 		pointer-events: none;
+	}
+
+	.sidebox-close {
+		display: none;
 	}
 
 	.sidebox-section {
@@ -1157,12 +1281,22 @@ const bookingNotices = [
 		list-style: none;
 	}
 
+	.booking-notices-wrap {
+		display: grid;
+		gap: 18px;
+		align-content: start;
+	}
+
 	.booking-notices li {
 		position: relative;
 		padding: 0 0 0 18px;
 		color: #41534f;
 		font-size: 14px;
 		line-height: 1.7;
+	}
+
+	.booking-notices li.is-collapsed {
+		display: none;
 	}
 
 	.booking-notices li::before {
@@ -1175,6 +1309,39 @@ const bookingNotices = [
 		background: #d86f45;
 		content: "";
 		transform: translateY(-50%);
+	}
+
+	.booking-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-self: end;
+		gap: 6px;
+		border: 0;
+		padding: 0;
+		background: transparent;
+		color: #d86f45;
+		font: inherit;
+		font-size: 14px;
+		font-weight: 900;
+		cursor: pointer;
+		transition: color 0.2s ease;
+	}
+
+	.booking-toggle:hover,
+	.booking-toggle:focus-visible {
+		color: #183b37;
+		outline: none;
+	}
+
+	.booking-toggle::after {
+		content: "↓";
+		font-size: 13px;
+		line-height: 1;
+		transition: transform 0.2s ease;
+	}
+
+	.booking-toggle[aria-expanded="true"]::after {
+		transform: rotate(180deg);
 	}
 
 	.booking-list {
@@ -1286,11 +1453,73 @@ const bookingNotices = [
 
 		.sidebox:hover,
 		.sidebox:focus-within {
+			width: 92px;
+			filter: none;
+		}
+
+		.sidebox.is-open {
 			width: min(176px, calc(100vw - 32px));
+			filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
 		}
 
 		.sidebox-panel {
 			width: min(176px, calc(100vw - 32px));
+		}
+
+		.sidebox:hover .sidebox-panel,
+		.sidebox:focus-within .sidebox-panel {
+			opacity: 0;
+			pointer-events: none;
+			transform: translate(18px, 18px) scale(0.96);
+		}
+
+		.sidebox.is-open .sidebox-panel {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translate(0, 0) scale(1);
+		}
+
+		.sidebox:hover .sidebox-toggle,
+		.sidebox:focus-within .sidebox-toggle {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.sidebox.is-open .sidebox-toggle {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.sidebox-close {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			z-index: 2;
+			display: grid;
+			width: 32px;
+			height: 32px;
+			place-items: center;
+			border: 0;
+			border-radius: 6px;
+			background: transparent;
+			color: #183b37;
+			cursor: pointer;
+		}
+
+		.sidebox-close span {
+			position: absolute;
+			width: 16px;
+			height: 2px;
+			border-radius: 999px;
+			background: currentColor;
+		}
+
+		.sidebox-close span:first-child {
+			transform: rotate(45deg);
+		}
+
+		.sidebox-close span:last-child {
+			transform: rotate(-45deg);
 		}
 
 		.split-layout,
@@ -1406,9 +1635,11 @@ const bookingNotices = [
 		}
 
 		.slider-controls {
-			right: 24px;
-			left: 24px;
-			justify-content: space-between;
+			right: auto;
+			left: 50%;
+			justify-content: center;
+			gap: 14px;
+			transform: translateX(-50%);
 		}
 
 		.section {
