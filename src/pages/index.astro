@@ -416,7 +416,7 @@ const bookingNotices = [
 	const sidebox = document.querySelector("[data-sidebox]");
 	const sideboxToggle = sidebox?.querySelector("[data-sidebox-toggle]");
 	const sideboxClose = sidebox?.querySelector("[data-sidebox-close]");
-	const mobileSideboxQuery = window.matchMedia("(max-width: 980px)");
+	const touchSideboxQuery = window.matchMedia("(hover: none), (pointer: coarse)");
 
 	const setSideboxOpen = (isOpen) => {
 		sidebox?.classList.toggle("is-open", isOpen);
@@ -424,7 +424,7 @@ const bookingNotices = [
 	};
 
 	sideboxToggle?.addEventListener("click", (event) => {
-		if (!mobileSideboxQuery.matches) {
+		if (!touchSideboxQuery.matches) {
 			return;
 		}
 
@@ -441,7 +441,7 @@ const bookingNotices = [
 	});
 
 	document.addEventListener("click", (event) => {
-		if (!mobileSideboxQuery.matches || !sidebox?.classList.contains("is-open")) {
+		if (!touchSideboxQuery.matches || !sidebox?.classList.contains("is-open")) {
 			return;
 		}
 
@@ -465,7 +465,7 @@ const bookingNotices = [
 		});
 	});
 
-	mobileSideboxQuery.addEventListener("change", () => {
+	touchSideboxQuery.addEventListener("change", () => {
 		setSideboxOpen(false);
 	});
 
@@ -923,6 +923,75 @@ const bookingNotices = [
 		display: none;
 	}
 
+	@media (hover: none), (pointer: coarse) {
+		.sidebox:hover,
+		.sidebox:focus-within {
+			width: 92px;
+			filter: none;
+		}
+
+		.sidebox.is-open {
+			width: min(176px, calc(100vw - 32px));
+			filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
+		}
+
+		.sidebox:hover .sidebox-panel,
+		.sidebox:focus-within .sidebox-panel {
+			opacity: 0;
+			pointer-events: none;
+			transform: translate(18px, 18px) scale(0.96);
+		}
+
+		.sidebox.is-open .sidebox-panel {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translate(0, 0) scale(1);
+		}
+
+		.sidebox:hover .sidebox-toggle,
+		.sidebox:focus-within .sidebox-toggle {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.sidebox.is-open .sidebox-toggle {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.sidebox-close {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			z-index: 2;
+			display: grid;
+			width: 32px;
+			height: 32px;
+			place-items: center;
+			border: 0;
+			border-radius: 6px;
+			background: transparent;
+			color: #183b37;
+			cursor: pointer;
+		}
+
+		.sidebox-close span {
+			position: absolute;
+			width: 16px;
+			height: 2px;
+			border-radius: 999px;
+			background: currentColor;
+		}
+
+		.sidebox-close span:first-child {
+			transform: rotate(45deg);
+		}
+
+		.sidebox-close span:last-child {
+			transform: rotate(-45deg);
+		}
+	}
+
 	.sidebox-section {
 		padding-bottom: 12px;
 		border-bottom: 1px solid rgba(24, 59, 55, 0.12);
@@ -1032,35 +1101,6 @@ const bookingNotices = [
 		gap: 22px;
 	}
 
-	.room-grid {
-		--room-col-1: 1fr;
-		--room-col-2: 1fr;
-		--room-col-3: 1fr;
-
-		grid-template-columns:
-			minmax(0, var(--room-col-1)) minmax(0, var(--room-col-2))
-			minmax(0, var(--room-col-3));
-		transition: grid-template-columns 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
-	}
-
-	.room-grid:has(.room-card:nth-child(1):hover) {
-		--room-col-1: 1.18fr;
-		--room-col-2: 0.91fr;
-		--room-col-3: 0.91fr;
-	}
-
-	.room-grid:has(.room-card:nth-child(2):hover) {
-		--room-col-1: 0.91fr;
-		--room-col-2: 1.18fr;
-		--room-col-3: 0.91fr;
-	}
-
-	.room-grid:has(.room-card:nth-child(3):hover) {
-		--room-col-1: 0.91fr;
-		--room-col-2: 0.91fr;
-		--room-col-3: 1.18fr;
-	}
-
 	.news-grid article,
 	.room-card,
 	.booking-panel {
@@ -1157,16 +1197,11 @@ const bookingNotices = [
 
 	.room-card {
 		overflow: hidden;
-		transform-origin: center;
-		transition:
-			transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
-			box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+		transition: box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 	}
 
 	.room-card:hover {
 		box-shadow: 0 24px 56px rgba(35, 46, 44, 0.16);
-		transform: scale(1.035);
-		z-index: 2;
 	}
 
 	.room-image-slider {
@@ -1185,8 +1220,8 @@ const bookingNotices = [
 		object-fit: cover;
 		opacity: 0;
 		transition:
-			opacity 260ms ease,
-			transform 260ms ease;
+			opacity 300ms ease,
+			transform 400ms ease;
 	}
 
 	.room-image-slider img.active {
@@ -1194,7 +1229,7 @@ const bookingNotices = [
 	}
 
 	.room-card:hover .room-image-slider img.active {
-		transform: scale(1.04);
+		transform: scale(1.1);
 	}
 
 	.room-image-controls {
@@ -1451,75 +1486,8 @@ const bookingNotices = [
 			transform: none;
 		}
 
-		.sidebox:hover,
-		.sidebox:focus-within {
-			width: 92px;
-			filter: none;
-		}
-
-		.sidebox.is-open {
-			width: min(176px, calc(100vw - 32px));
-			filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
-		}
-
 		.sidebox-panel {
 			width: min(176px, calc(100vw - 32px));
-		}
-
-		.sidebox:hover .sidebox-panel,
-		.sidebox:focus-within .sidebox-panel {
-			opacity: 0;
-			pointer-events: none;
-			transform: translate(18px, 18px) scale(0.96);
-		}
-
-		.sidebox.is-open .sidebox-panel {
-			opacity: 1;
-			pointer-events: auto;
-			transform: translate(0, 0) scale(1);
-		}
-
-		.sidebox:hover .sidebox-toggle,
-		.sidebox:focus-within .sidebox-toggle {
-			opacity: 1;
-			pointer-events: auto;
-		}
-
-		.sidebox.is-open .sidebox-toggle {
-			opacity: 0;
-			pointer-events: none;
-		}
-
-		.sidebox-close {
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			z-index: 2;
-			display: grid;
-			width: 32px;
-			height: 32px;
-			place-items: center;
-			border: 0;
-			border-radius: 6px;
-			background: transparent;
-			color: #183b37;
-			cursor: pointer;
-		}
-
-		.sidebox-close span {
-			position: absolute;
-			width: 16px;
-			height: 2px;
-			border-radius: 999px;
-			background: currentColor;
-		}
-
-		.sidebox-close span:first-child {
-			transform: rotate(45deg);
-		}
-
-		.sidebox-close span:last-child {
-			transform: rotate(-45deg);
 		}
 
 		.split-layout,
@@ -1551,17 +1519,6 @@ const bookingNotices = [
 
 		.room-card:hover {
 			box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
-			transform: none;
-		}
-
-		.room-card:hover .room-image-slider img.active {
-			transform: none;
-		}
-
-		.room-grid:has(.room-card:nth-child(1):hover),
-		.room-grid:has(.room-card:nth-child(2):hover),
-		.room-grid:has(.room-card:nth-child(3):hover) {
-			grid-template-columns: none;
 		}
 
 		.about-photo {
