@@ -18,7 +18,10 @@ const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
 const currentRegion = regions.find((region) => region.id === Astro.params.id) ?? regions[0];
 ---
 
-<Layout>
+<Layout
+	title={`Easego ${currentRegion.label}合作旅宿｜精選${currentRegion.label}住宿`}
+	description={`探索 Easego ${currentRegion.label}合作旅宿，查看精選住宿、旅宿特色、價格資訊與訂房連結。`}
+>
 	<header class="site-header">
 		<a class="brand" href={baseUrl} aria-label="回到首頁">
 			<span class="brand-mark">H&amp;</span>
@@ -120,6 +123,11 @@ const currentRegion = regions.find((region) => region.id === Astro.params.id) ??
 		gap: 12px;
 		color: #173a36;
 		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.site-header a {
+		text-decoration: none;
 	}
 
 	.brand-mark {

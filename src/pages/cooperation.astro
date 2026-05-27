@@ -11,7 +11,10 @@ const regionUrl = (id) => `${baseUrl}cooperation/region/${id}/`;
 const allHomestays = regions.flatMap((region) => region.homestays);
 ---
 
-<Layout>
+<Layout
+	title="Easego 合作旅宿｜精選合作旅宿列表"
+	description="瀏覽 Easego 聯合行銷合作旅宿，依地區探索精選民宿、旅宿特色、房型資訊與訂房連結。"
+>
 	<header class="site-header">
 		<a class="brand" href={baseUrl} aria-label="回到首頁">
 			<span class="brand-mark">H&amp;</span>
@@ -126,6 +129,11 @@ const allHomestays = regions.flatMap((region) => region.homestays);
 		gap: 12px;
 		color: #173a36;
 		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.site-header a {
+		text-decoration: none;
 	}
 
 	.brand-mark {

@@ -118,7 +118,10 @@ const cases = [
 ];
 ---
 
-<Layout>
+<Layout
+  title="Easego 聯合行銷合作旅宿｜攜手共創・放大價值・一起成長"
+  description="Easego 聯合行銷整合合作旅宿、多平台曝光、精準客群導流與專人行銷支援，協助旅宿品牌提升訂房率與長期營運成效。"
+>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="回到首頁">
       <img class="brand-logo" src={logoUrl} alt="Easego" />
@@ -421,12 +424,17 @@ const cases = [
     backdrop-filter: blur(12px);
   }
 
+  .site-header a {
+    text-decoration: none;
+  }
+
   .brand {
     display: inline-flex;
     align-items: center;
     gap: 12px;
     font-weight: 900;
     color: #113532;
+    text-decoration: none;
   }
 
   .brand-logo {

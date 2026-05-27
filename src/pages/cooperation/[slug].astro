@@ -45,7 +45,11 @@ const bookingNotices = featuredHomestay.bookingNotices;
 const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 ---
 
-<Layout>
+<Layout
+	title={`${featuredHomestay.name}｜Easego 合作旅宿`}
+	description={featuredHomestay.summary}
+	image={featuredHomestay.coverImage}
+>
 	<header class="site-header">
 		<a class="brand" href="#top" aria-label="回到首頁">
 			<span class:list={["brand-mark", { "brand-mark-logo": featuredHomestay.logo }]}>
@@ -554,6 +558,11 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 		gap: 10px;
 		font-weight: 800;
 		color: #193b37;
+		text-decoration: none;
+	}
+
+	.site-header a {
+		text-decoration: none;
 	}
 
 	.brand-mark {
@@ -594,11 +603,10 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 
 	.main-nav a {
 		padding: 8px 0;
-		border-bottom: 2px solid transparent;
 	}
 
 	.main-nav a:hover {
-		border-color: #d86f45;
+		color: #d86f45;
 	}
 
 	.nav-toggle {

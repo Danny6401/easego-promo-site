@@ -2,20 +2,39 @@
 const baseUrl = import.meta.env.BASE_URL.endsWith("/")
 	? import.meta.env.BASE_URL
 	: `${import.meta.env.BASE_URL}/`;
+
+const {
+	title = "Easego 聯合行銷合作旅宿",
+	description = "Easego 聯合行銷整合合作旅宿、多平台曝光與精準導流，協助旅宿品牌提升能見度、訂房率與長期營運成效。",
+	image = `${baseUrl}easegoLogo.png`,
+} = Astro.props;
+
+const canonicalUrl = Astro.url.href;
+const metaImage = image.startsWith("http") ? image : new URL(image, Astro.site ?? Astro.url).toString();
 ---
 
 <!doctype html>
 <html lang="zh-Hant">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/png" href={`${baseUrl}easegoLogo.png`} />
+		<link rel="apple-touch-icon" href={`${baseUrl}easegoLogo.png`} />
+		<link rel="canonical" href={canonicalUrl} />
 		<meta name="generator" content={Astro.generator} />
-		<title>海岬晨光民宿 | 台東海岸一頁式民宿介紹</title>
-		<meta
-			name="description"
-			content="海岬晨光民宿一頁式介紹網站，包含最新消息、關於我們、客房介紹、訂房資訊與民宿位置。"
-		/>
+		<meta name="theme-color" content="#087d8b" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:locale" content="zh_TW" />
+		<meta property="og:image" content={metaImage} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={metaImage} />
 	</head>
 	<body>
 		<slot />
