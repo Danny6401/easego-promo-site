@@ -1,0 +1,442 @@
+---
+import Layout from "../layouts/Layout.astro";
+import cooperationData from "../data/cooperation-homestays.json";
+
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`;
+const regions = cooperationData.regions;
+const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
+const regionUrl = (id) => `${baseUrl}cooperation/region/${id}/`;
+const allHomestays = regions.flatMap((region) => region.homestays);
+---
+
+<Layout>
+	<header class="site-header">
+		<a class="brand" href={baseUrl} aria-label="回到首頁">
+			<span class="brand-mark">H&amp;</span>
+			<span>Easego 合作旅宿</span>
+		</a>
+		<nav class="main-nav" aria-label="區域導覽">
+			{regions.map((region) => <a href={`#${region.id}`}>{region.label}</a>)}
+		</nav>
+	</header>
+
+	<main>
+		<section class="page-hero">
+			<div>
+				<p class="eyebrow">Partner Stays</p>
+				<h1>配合民宿列表</h1>
+				<p>所有合作民宿依北、中、南、東、離島、國外整理。卡片點進去會進到各民宿自己的詳細頁面。</p>
+			</div>
+			<div class="summary-panel" aria-label="合作民宿統計">
+				<strong>{allHomestays.length}</strong>
+				<span>間配合民宿</span>
+			</div>
+		</section>
+
+		<section class="region-tabs" aria-label="快速切換區域">
+			{regions.map((region) => <a href={`#${region.id}`}>{region.label}</a>)}
+		</section>
+
+		<div class="region-list">
+			{
+				regions.map((region) => (
+					<section class="region-section" id={region.id} aria-labelledby={`${region.id}-heading`}>
+						<div class="region-heading-row">
+							<div class="section-heading">
+								<p class="eyebrow">{region.id}</p>
+								<h2 id={`${region.id}-heading`}>{region.label}</h2>
+								<p>{region.description}</p>
+							</div>
+							<a class="view-more" href={regionUrl(region.id)}>
+								{region.homestays.length > 4 ? "查看更多" : "查看全部"}
+							</a>
+						</div>
+						<div class="card-grid">
+							{region.homestays.slice(0, 4).map((homestay) => (
+								<article class="homestay-card">
+									<a href={homestayUrl(homestay.slug)}>
+										<img src={homestay.coverImage} alt={`${homestay.name}照片`} loading="lazy" />
+										<div class="card-body">
+											<div class="card-meta">
+												<span>{homestay.area}</span>
+												<span>★ {homestay.rating}</span>
+											</div>
+											<h3>{homestay.name}</h3>
+											<p>{homestay.summary}</p>
+											<div class="tag-list">
+												{homestay.features.map((feature) => <span>{feature}</span>)}
+											</div>
+											<div class="card-footer">
+												<strong>{homestay.startingPrice}</strong>
+												<span>{homestay.capacity}</span>
+											</div>
+										</div>
+									</a>
+								</article>
+							))}
+						</div>
+					</section>
+				))
+			}
+		</div>
+	</main>
+
+	<footer class="site-footer">
+		<span>© 2026 Easego 聯合行銷</span>
+		<span>合作旅宿列表</span>
+	</footer>
+</Layout>
+
+<style>
+	:global(html) {
+		scroll-behavior: smooth;
+		scroll-padding-top: 96px;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		padding: 18px clamp(20px, 5vw, 72px);
+		background: rgba(251, 250, 247, 0.94);
+		border-bottom: 1px solid rgba(24, 59, 55, 0.1);
+		backdrop-filter: blur(14px);
+	}
+
+	.brand,
+	.main-nav,
+	.region-tabs {
+		display: flex;
+		align-items: center;
+	}
+
+	.brand {
+		flex: 0 0 auto;
+		gap: 12px;
+		color: #173a36;
+		font-weight: 900;
+	}
+
+	.brand-mark {
+		display: grid;
+		width: 40px;
+		height: 40px;
+		place-items: center;
+		border-radius: 8px;
+		background: #0f5e58;
+		color: #fff;
+	}
+
+	.main-nav {
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 16px 24px;
+		color: #34534e;
+		font-size: 15px;
+		font-weight: 800;
+	}
+
+	.main-nav a:hover {
+		color: #0f5e58;
+	}
+
+	.page-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 240px;
+		gap: 36px;
+		align-items: end;
+		padding: 112px clamp(24px, 7vw, 110px) 72px;
+		background: #f2eee7;
+	}
+
+	.page-hero > div:first-child {
+		max-width: 780px;
+	}
+
+	.eyebrow {
+		margin: 0 0 12px;
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin-top: 0;
+	}
+
+	h1 {
+		margin-bottom: 22px;
+		color: #183b37;
+		font-size: clamp(42px, 6vw, 76px);
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin-bottom: 14px;
+		color: #183b37;
+		font-size: clamp(32px, 4vw, 48px);
+		line-height: 1.12;
+	}
+
+	h3 {
+		margin-bottom: 10px;
+		color: #183b37;
+		font-size: 22px;
+	}
+
+	p {
+		color: #5d6d69;
+		line-height: 1.8;
+	}
+
+	.summary-panel {
+		display: grid;
+		gap: 8px;
+		padding: 28px;
+		border: 1px solid rgba(24, 59, 55, 0.12);
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 18px 42px rgba(35, 46, 44, 0.08);
+	}
+
+	.summary-panel strong {
+		color: #0f5e58;
+		font-size: 48px;
+		line-height: 1;
+	}
+
+	.summary-panel span {
+		color: #5d6d69;
+		font-weight: 800;
+	}
+
+	.region-tabs {
+		position: sticky;
+		top: 77px;
+		z-index: 10;
+		flex-wrap: wrap;
+		gap: 10px;
+		padding: 14px clamp(24px, 7vw, 110px);
+		background: rgba(251, 250, 247, 0.94);
+		border-bottom: 1px solid rgba(24, 59, 55, 0.1);
+		backdrop-filter: blur(12px);
+	}
+
+	.region-tabs a {
+		padding: 8px 14px;
+		border: 1px solid rgba(24, 59, 55, 0.12);
+		border-radius: 999px;
+		background: #fff;
+		color: #34534e;
+		font-size: 14px;
+		font-weight: 900;
+	}
+
+	.region-tabs a:hover {
+		border-color: rgba(216, 111, 69, 0.42);
+		color: #d86f45;
+	}
+
+	.region-list {
+		display: grid;
+		gap: 0;
+	}
+
+	.region-section {
+		padding: 86px clamp(24px, 7vw, 110px);
+	}
+
+	.region-section:nth-child(even) {
+		background: #f7f4ef;
+	}
+
+	.section-heading {
+		max-width: 720px;
+		margin-bottom: 34px;
+	}
+
+	.region-heading-row {
+		display: flex;
+		align-items: start;
+		justify-content: space-between;
+		gap: 24px;
+	}
+
+	.region-heading-row .section-heading {
+		margin-bottom: 34px;
+	}
+
+	.view-more {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 42px;
+		margin-top: 34px;
+		padding: 0 18px;
+		border: 1px solid rgba(216, 111, 69, 0.32);
+		border-radius: 999px;
+		background: #fff;
+		color: #d86f45;
+		font-size: 14px;
+		font-weight: 900;
+		white-space: nowrap;
+	}
+
+	.view-more:hover {
+		border-color: #d86f45;
+		background: #fff7f1;
+	}
+
+	.card-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 22px;
+	}
+
+	.homestay-card {
+		overflow: hidden;
+		border: 1px solid rgba(24, 59, 55, 0.1);
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.homestay-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 24px 56px rgba(35, 46, 44, 0.14);
+	}
+
+	.homestay-card img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+	}
+
+	.card-body {
+		display: grid;
+		gap: 14px;
+		padding: 24px;
+	}
+
+	.card-meta,
+	.card-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+	}
+
+	.card-meta {
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+	}
+
+	.card-body p {
+		margin-bottom: 0;
+	}
+
+	.tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.tag-list span {
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: #f2eee7;
+		color: #41534f;
+		font-size: 13px;
+		font-weight: 800;
+	}
+
+	.card-footer {
+		padding-top: 4px;
+		color: #60706c;
+	}
+
+	.card-footer strong {
+		color: #183b37;
+	}
+
+	.site-footer {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 28px clamp(24px, 7vw, 110px);
+		background: #102522;
+		color: rgba(255, 255, 255, 0.76);
+	}
+
+	@media (max-width: 980px) {
+		.page-hero {
+			grid-template-columns: 1fr;
+			padding-top: 86px;
+		}
+
+		.summary-panel {
+			max-width: 260px;
+		}
+
+		.card-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 680px) {
+		.site-header {
+			display: grid;
+			gap: 14px;
+		}
+
+		.main-nav {
+			justify-content: flex-start;
+		}
+
+		.region-tabs {
+			top: 121px;
+			overflow-x: auto;
+			flex-wrap: nowrap;
+		}
+
+		.region-heading-row {
+			display: grid;
+			gap: 10px;
+		}
+
+		.view-more {
+			justify-self: start;
+			margin-top: 0;
+			margin-bottom: 24px;
+		}
+
+		.card-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.site-footer {
+			flex-direction: column;
+		}
+	}
+</style>

@@ -1,1632 +1,1640 @@
----
+﻿---
 import Layout from "../layouts/Layout.astro";
+import cooperationData from "../data/cooperation-homestays.json";
+
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const cooperationUrl = `${baseUrl}cooperation/`;
+const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
+const advantageIconUrl = (icon) => `${baseUrl}advantage-icons/${icon}.png`;
+const ctaPanelUrl = `${baseUrl}cta-panel-transparent.png`;
+const logoUrl = `${baseUrl}easegoLogo.png`;
+const heroMapUrl = `${baseUrl}taiwan-map-hero.png`;
+const regions = cooperationData.regions;
+const allHomestays = cooperationData.regions.flatMap((region) => region.homestays);
+const regionClassNames = {
+  north: "north",
+  central: "central",
+  south: "south",
+  east: "east",
+  islands: "islands",
+  overseas: "overseas",
+};
 
 const navItems = [
-	{ label: "最新消息", href: "#news" },
-	{ label: "關於我們", href: "#about" },
-	{ label: "客房介紹", href: "#rooms" },
-	{ label: "訂房資訊", href: "#booking" },
-	{ label: "民宿位置", href: "#location" },
+  { label: "合作旅宿", href: cooperationUrl },
+  { label: "合作優勢", href: "#advantages" },
+  { label: "成功案例", href: "#cases" },
+  { label: "加入我們", href: "#contact" },
 ];
 
-const slides = [
-	{
-		title: "醒在海風與晨光之間",
-		subtitle: "台東海岸線旁的靜謐民宿，步行 5 分鐘抵達海邊。",
-		image:
-			"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
-	},
-	{
-		title: "把日常留給山海",
-		subtitle: "庭院、露台與大片採光，適合慢旅行與家庭小聚。",
-		image:
-			"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1800&q=85",
-	},
-	{
-		title: "每一晚都安靜好眠",
-		subtitle: "精選寢具、獨立衛浴、在地早餐，讓旅程自然放鬆。",
-		image:
-			"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1800&q=85",
-	},
+const stats = [
+  { value: `${allHomestays.length}`, suffix: "+", label: "累積合作旅宿", icon: "building" },
+  { value: `${regions.length}`, suffix: "+", label: "區域合作據點", icon: "user" },
+  { value: "多平台曝光", suffix: "", label: "精準行銷推廣", icon: "megaphone" },
 ];
 
-const rooms = [
-	{
-		name: "晨曦雙人房",
-		price: "平日 NT$3,200 起",
-		images: [
-			"https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80",
-		],
-		description:
-			"大片窗景迎進晨光與海風，適合雙人慢旅行。房內配置獨立衛浴與陽台，晚上能安靜聽見海浪聲。",
-	},
-	{
-		name: "海風四人房",
-		price: "平日 NT$4,800 起",
-		images: [
-			"https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80",
-		],
-		description:
-			"保留寬敞活動空間與柔和採光，適合家庭或好友同行。簡單舒適的配置，讓旅途中也能自在休息。",
-	},
-	{
-		name: "星空包棟",
-		price: "平日 NT$16,800 起",
-		images: [
-			"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80",
-			"https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
-		],
-		description:
-			"整棟空間完整保留給同行旅伴，可使用客廳、廚房與庭院。適合家族旅行、慶生聚會與小型包場活動。",
-	},
+const regionBadges = regions.map((region) => ({
+  id: region.id,
+  label: region.label,
+  count: region.homestays.length,
+  className: regionClassNames[region.id] ?? region.id,
+  image: region.homestays[0]?.coverImage,
+}));
+
+const featuredPartnerSlugs = [
+  "taitung-cape-morning",
+  "jiufen-mist-house",
+  "taichung-oldtown-stay",
+  "kenting-blue-cabin",
+  "taipei-river-view-stay",
+  "yilan-rice-field-villa",
+  "penghu-coral-bay",
 ];
 
-const news = [
-	{
-		date: "2026-06-01",
-		displayDate: "2026.06.01",
-		title: "夏季海岸假期開放預訂",
-		description: "連住兩晚加贈在地早餐組，適用 6 月至 8 月平日入住。",
-		image:
-			"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-	},
-	{
-		date: "2026-05-20",
-		displayDate: "2026.05.20",
-		title: "包棟旅客可預約庭院晚餐",
-		description: "提前 5 日預約即可安排私廚料理與海景露台座位。",
-		image:
-			"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80",
-	},
-	{
-		date: "2026-05-05",
-		displayDate: "2026.05.05",
-		title: "新增車站接送服務",
-		description: "台東車站至民宿單趟接送，請於訂房時一併告知班次。",
-		image:
-			"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-	},
+const homestaysBySlug = new Map(allHomestays.map((homestay) => [homestay.slug, homestay]));
+const partners = featuredPartnerSlugs
+  .map((slug) => homestaysBySlug.get(slug))
+  .filter(Boolean)
+  .map((homestay) => ({
+  name: homestay.name,
+  location: homestay.area,
+  rating: homestay.rating,
+  roomCount: homestay.roomCount,
+  summary: homestay.summary,
+  href: homestayUrl(homestay.slug),
+  image: homestay.coverImage,
+}));
+const showPartnerControls = partners.length > 5;
+
+const advantages = [
+  { title: "多平台聯合曝光", description: "整合多元平台資源，擴大品牌能見度，精準觸及目標客群。", icon: "megaphone" },
+  { title: "精準客群導流", description: "數據驅動行銷，將對的旅客帶到你的旅宿，提升訂房轉換。", icon: "target" },
+  { title: "提升訂房率", description: "優化曝光與轉換流程，有效提升官網與平台訂房量。", icon: "growth" },
+  { title: "長期合作共贏", description: "建立穩定合作關係，互相成長，創造長期價值。", icon: "care" },
+  { title: "專人行銷支援", description: "專職行銷顧問服務，提供活動規劃與行銷建議。", icon: "headset" },
+  { title: "安心透明合作", description: "合作流程透明公開，成效數據清楚可見，安心可靠。", icon: "shield" },
 ];
 
-const bookingNotices = [
-	"進房時間：當日下午 15:00 以後。",
-	"退房時間：翌日上午 11:00 以前。退房時，務必請交還房門鑰匙。",
-	"當天請依約定人數入住，人數或房間數量若有增減請務必事先告知。",
-	"入住時請出示您的證件，以便辦理登記，並繳付住宿費用或尾款。",
-	"為維護住宿環境，室內及房間內請勿吸煙、酗酒、聚賭，並嚴禁開趴吸毒，不便處請見諒。",
-	"請勿攜帶寵物，不便處請見諒。",
-	"為維護住宿安寧，請每位房客保持輕聲細語，相互尊重住宿空間上的安寧。",
-	"個人貴重物品請自行妥善保管，如有遺失，恕不負責，敬請見諒。",
-	"屋內之傢俱、電器、擺設、器具等皆為本民宿財產，物品如有折損或遺失，敬請照價賠償。",
-	"請勿任意移動室內擺設，如床舖、液晶電視。",
-	"請把民宿當成您自己的家一樣愛護，並期盼您常回來看我們。",
-	"若有服務不周之處，請告訴我們，謝謝您的合作，祝旅途平安順心。",
+const cases = [
+  {
+    title: "台東．海岬晨光民宿",
+    description: "透過聯合行銷推廣，平日訂房率穩定提升。",
+    image: homestaysBySlug.get("taitung-cape-morning")?.coverImage,
+    metrics: [
+      { value: "35%", label: "訂房率成長" },
+      { value: "28%", label: "官網轉換成長" },
+    ],
+  },
+  {
+    title: "台中．舊城旅舍",
+    description: "精準廣告投放，帶來更多高品質訂單。",
+    image: homestaysBySlug.get("taichung-oldtown-stay")?.coverImage,
+    metrics: [
+      { value: "42%", label: "訂房率成長" },
+      { value: "33%", label: "營收成長" },
+    ],
+  },
+  {
+    title: "墾丁．藍潮小屋",
+    description: "暑假檔期訂單爆滿，品牌聲量大幅提升。",
+    image: homestaysBySlug.get("kenting-blue-cabin")?.coverImage,
+    metrics: [
+      { value: "55%", label: "訂房率成長" },
+      { value: "41%", label: "社群互動成長" },
+    ],
+  },
+  {
+    title: "南投．杉林斜屋",
+    description: "鎖定深度旅客，淡旺季表現更趨均衡。",
+    image: homestaysBySlug.get("nantou-forest-loft")?.coverImage,
+    metrics: [
+      { value: "30%", label: "訂房率成長" },
+      { value: "25%", label: "回訪率成長" },
+    ],
+  },
 ];
 ---
 
 <Layout>
-	<header class="site-header">
-		<a class="brand" href="#top" aria-label="回到首頁">
-			<span class="brand-mark">海</span>
-			<span>海岬晨光民宿</span>
-		</a>
-		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
-			<span></span>
-			<span></span>
-			<span></span>
-		</button>
-		<nav id="main-nav" class="main-nav" aria-label="主要導覽">
-			{navItems.map((item) => <a href={item.href}>{item.label}</a>)}
-		</nav>
-	</header>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="回到首頁">
+      <img class="brand-logo" src={logoUrl} alt="Easego" />
+      <span>Easego 聯合行銷</span>
+    </a>
+    <nav class="main-nav" aria-label="主要導覽">
+      {navItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+  </header>
 
-	<main id="top">
-		<section class="hero" aria-label="民宿形象輪播">
-			<div class="hero-slider" data-slider>
-				{
-					slides.map((slide, index) => (
-						<article
-							class:list={["hero-slide", { active: index === 0 }]}
-							style={`background-image: linear-gradient(90deg, rgba(13, 31, 35, .74), rgba(13, 31, 35, .2)), url('${slide.image}')`}
-						>
-							<div class="hero-content">
-								<p class="eyebrow">Taitung Coast Stay</p>
-								<h1>{slide.title}</h1>
-								<p>{slide.subtitle}</p>
-								<a class="hero-action" href="#booking">查看訂房資訊</a>
-							</div>
-						</article>
-					))
-				}
-				<div class="slider-controls" aria-label="輪播控制">
-					<button type="button" data-prev aria-label="上一張">‹</button>
-					<div class="slider-dots">
-						{
-							slides.map((_, index) => (
-								<button
-									type="button"
-									class:list={{ active: index === 0 }}
-									data-dot={index}
-									aria-label={`切換到第 ${index + 1} 張`}
-								/>
-							))
-						}
-					</div>
-					<button type="button" data-next aria-label="下一張">›</button>
-				</div>
-			</div>
-		</section>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Easego 聯合行銷</p>
+        <h1><span>Easego</span>聯合行銷合作</h1>
+        <p class="hero-slogan">攜手共創・放大價值・一起成長</p>
+        <div class="hero-stats" aria-label="合作旅宿統計">
+          {stats.map((item) => (
+            <div class="hero-stat">
+              <span class="stat-icon" aria-hidden="true">
+                {
+                  item.icon === "building" && (
+                    <svg viewBox="0 0 48 48">
+                      <path d="M8 42V15l16-7v34" />
+                      <path d="M24 42V20l16 6v16" />
+                      <path d="M14 19h3M14 25h3M14 31h3M29 28h3M29 34h3" />
+                    </svg>
+                  )
+                }
+                {
+                  item.icon === "user" && (
+                    <svg viewBox="0 0 48 48">
+                      <path d="M24 25a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                      <path d="M9 42c1.7-8.5 7.2-13 15-13s13.3 4.5 15 13" />
+                    </svg>
+                  )
+                }
+                {
+                  item.icon === "megaphone" && (
+                    <svg viewBox="0 0 48 48">
+                      <path d="M7 28h8l20 8V12L15 20H7v8Z" />
+                      <path d="M15 28l4 11h7l-5-9M39 18l4-4M40 24h6M39 30l4 4" />
+                    </svg>
+                  )
+                }
+              </span>
+              <span class="stat-copy">
+                <strong>{item.value}{item.suffix}</strong>
+                <span>{item.label}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+        <div class="hero-actions">
+          <a class="button button-primary" href={cooperationUrl}>立即合作</a>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="合作旅宿區域地圖">
+        <div class="map-card">
+          <img class="map-image" src={heroMapUrl} alt="台灣合作旅宿分布地圖" />
+          {regionBadges.map((region) => (
+            <a class={`region-badge ${region.className}`} href={`${baseUrl}cooperation/region/${region.id}/`}>
+              {region.image && <img class="badge-photo" src={region.image} alt="" loading="lazy" />}
+              <span class="badge-count">
+                <span>{region.label}</span>
+                <strong>{region.count}間</strong>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
 
-		<aside class="sidebox" data-sidebox aria-label="快速訂房資訊">
-			<button
-				class="sidebox-toggle"
-				type="button"
-				aria-label="開啟快速訂房"
-				aria-expanded="false"
-				data-sidebox-toggle
-			>
-				<span>快速訂房</span>
-			</button>
-			<div class="sidebox-panel">
-				<button class="sidebox-close" type="button" aria-label="關閉快速訂房" data-sidebox-close>
-					<span></span>
-					<span></span>
-				</button>
-				<div class="sidebox-section sidebox-reserve">
-					<p>快速訂房</p>
-					<a class="sidebox-button" href="#booking">Reserve</a>
-				</div>
-				<div class="sidebox-section">
-					<div class="sidebox-icons" aria-label="訂房平台連結">
-						<a href="#booking" aria-label="Booking.com">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=booking.com"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-						<a href="#booking" aria-label="Agoda">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=agoda.com"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-						<a href="#booking" aria-label="易遊網">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-					</div>
-				</div>
-				<div class="sidebox-section">
-					<div class="sidebox-icons" aria-label="社群連結">
-						<a href="#" aria-label="Facebook">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-						<a href="#" aria-label="Instagram">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=instagram.com"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-						<a href="#" aria-label="LINE">
-							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=line.me"
-								alt=""
-								loading="lazy"
-							/>
-						</a>
-					</div>
-				</div>
-			</div>
-		</aside>
+    <section id="partners" class="section section-light">
+      <div class="partner-showcase">
+        <div class="section-heading partner-heading">
+          <h2>精選合作旅宿</h2>
+          <p>嚴選優質旅宿，一起創造更多旅程可能。</p>
+          <a class="button button-outline" href={cooperationUrl}>查看更多合作旅宿</a>
+        </div>
+        <div class="partner-track-shell">
+          <div class="partner-track" data-partner-track>
+            {partners.map((item) => (
+              <article class="partner-card">
+                <a href={item.href}>
+                  <div class="partner-card-image">
+                    <img src={item.image} alt={item.name} loading="lazy" />
+                    <span class="partner-location">● {item.location}</span>
+                  </div>
+                  <div class="partner-card-body">
+                    <h3>{item.name}</h3>
+                    <p>{item.summary}</p>
+                    <div class="partner-card-meta">
+                      <span>★ {item.rating}</span>
+                      <span>{item.roomCount}</span>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+          {showPartnerControls && (
+            <div class="partner-scroll-controls" aria-label="精選合作旅宿滑動控制">
+              <button
+                class="partner-scroll-button is-hidden"
+                type="button"
+                data-partner-scroll="prev"
+                aria-label="往前看"
+                aria-hidden="true"
+                disabled
+              >
+                ‹
+              </button>
+              <button class="partner-scroll-button" type="button" data-partner-scroll="next" aria-label="往後看">
+                ›
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      {
+        showPartnerControls && (
+          <script>
+            const partnerTrack = document.querySelector("[data-partner-track]");
+            const partnerButtons = document.querySelectorAll("[data-partner-scroll]");
+            const previousPartnerButton = document.querySelector('[data-partner-scroll="prev"]');
+            const nextPartnerButton = document.querySelector('[data-partner-scroll="next"]');
 
-		<section id="news" class="section section-muted">
-			<div class="section-inner">
-				<div class="section-heading">
-					<p class="eyebrow">News</p>
-					<h2>最新消息</h2>
-				</div>
-				<div class="news-grid">
-					{
-						news.map((item) => (
-							<article>
-								<img src={item.image} alt={`${item.title}照片`} loading="lazy" />
-								<div>
-									<time datetime={item.date}>{item.displayDate}</time>
-									<h3>{item.title}</h3>
-									<p>{item.description}</p>
-								</div>
-							</article>
-						))
-					}
-				</div>
-			</div>
-		</section>
+            const updatePartnerButtons = () => {
+              if (!(partnerTrack instanceof HTMLElement)) return;
+              if (!(previousPartnerButton instanceof HTMLButtonElement)) return;
+              if (!(nextPartnerButton instanceof HTMLButtonElement)) return;
 
-		<section id="about" class="section">
-			<div class="split-layout">
-				<div class="about-photo" aria-label="民宿公共空間照片"></div>
-				<div class="section-copy">
-					<p class="eyebrow">About</p>
-					<h2>關於我們</h2>
-					<p>
-						海岬晨光民宿位在台東東海岸安靜聚落，保留木作、庭院與大片窗景，
-						讓旅人用舒服的速度靠近山與海。主人長住在地，能協助安排秘境海灘、
-						部落餐桌、單車路線與親子友善行程。
-					</p>
-					<div class="stats">
-						<div><strong>5 min</strong><span>步行到海邊</span></div>
-						<div><strong>8 間</strong><span>精緻客房</span></div>
-						<div><strong>4.9</strong><span>旅客評分</span></div>
-					</div>
-				</div>
-			</div>
-		</section>
+              const edgeTolerance = 16;
+              const maxScrollLeft = partnerTrack.scrollWidth - partnerTrack.clientWidth;
+              const atStart = partnerTrack.scrollLeft <= edgeTolerance;
+              const atEnd = partnerTrack.scrollLeft >= maxScrollLeft - edgeTolerance;
 
-		<section id="rooms" class="section section-muted">
-			<div class="section-inner">
-				<div class="section-heading">
-					<p class="eyebrow">Rooms</p>
-					<h2>客房介紹</h2>
-				</div>
-				<div class="room-grid">
-					{
-						rooms.map((room) => (
-							<article class="room-card" data-room-card>
-								<div class="room-image-slider">
-									{room.images.map((image, imageIndex) => (
-										<img
-											src={image}
-											alt={`${room.name}空間照片 ${imageIndex + 1}`}
-											loading="lazy"
-											class:list={{ active: imageIndex === 0 }}
-										/>
-									))}
-									<div class="room-image-controls">
-										<button type="button" data-room-image-prev aria-label="上一張房型照片">
-											‹
-										</button>
-										<button type="button" data-room-image-next aria-label="下一張房型照片">
-											›
-										</button>
-									</div>
-									<div class="room-image-dots" aria-label={`${room.name}照片狀態`}>
-										{
-											room.images.map((_, imageIndex) => (
-												<button
-													type="button"
-													class:list={{ active: imageIndex === 0 }}
-													data-room-image-dot={imageIndex}
-													aria-label={`切換到第 ${imageIndex + 1} 張房型照片`}
-												/>
-											))
-										}
-									</div>
-								</div>
-								<div>
-									<h3>{room.name}</h3>
-									<p>{room.price}</p>
-									<p class="room-description">{room.description}</p>
-								</div>
-							</article>
-						))
-					}
-				</div>
-			</div>
-		</section>
+              previousPartnerButton.classList.toggle("is-hidden", atStart);
+              previousPartnerButton.disabled = atStart;
+              previousPartnerButton.setAttribute("aria-hidden", String(atStart));
 
-		<section id="booking" class="section">
-			<div class="booking-panel">
-				<div>
-					<p class="eyebrow">Booking</p>
-					<h2>訂房資訊</h2>
-					<div class="booking-list">
-						<div><span>平日</span><strong>週日至週四</strong></div>
-						<div><span>假日</span><strong>週五、週六與國定假日</strong></div>
-						<div><span>付款</span><strong>轉帳、信用卡、現金</strong></div>
-						<div><span>聯絡</span><strong>089-123-456 / Line @capehome</strong></div>
-					</div>
-				</div>
-				<div class="booking-notices-wrap" data-booking-notices>
-					<ul class="booking-notices">
-						{
-							bookingNotices.map((notice, index) => (
-								<li
-									class={index >= 4 ? "is-collapsed" : ""}
-									data-booking-notice-extra={index >= 4 ? "true" : undefined}
-								>
-									{notice}
-								</li>
-							))
-						}
-					</ul>
-					{
-						bookingNotices.length > 4 && (
-							<button
-								class="booking-toggle"
-								type="button"
-								data-booking-toggle
-								aria-expanded="false"
-								data-expand-label="查看更多"
-								data-collapse-label="收合"
-							>
-								<span>查看更多</span>
-							</button>
-						)
-					}
-				</div>
-			</div>
-		</section>
+              nextPartnerButton.classList.toggle("is-hidden", atEnd);
+              nextPartnerButton.disabled = atEnd;
+              nextPartnerButton.setAttribute("aria-hidden", String(atEnd));
+            };
 
-		<section id="location" class="section section-location">
-			<div class="location-content">
-				<div>
-					<p class="eyebrow">Location</p>
-					<h2>民宿位置</h2>
-					<p>台東縣成功鎮海岸路 88 號，鄰近三仙台與都歷海灘。</p>
-					<p>自行開車可停放於民宿前庭；搭乘大眾運輸可至台東車站轉乘海線客運。</p>
-				</div>
-				<div class="map-card" aria-label="民宿位置示意地圖">
-					<span>台東海岸</span>
-					<strong>海岬晨光民宿</strong>
-				</div>
-			</div>
-		</section>
-	</main>
+            partnerButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                if (!(partnerTrack instanceof HTMLElement)) return;
 
-	<footer class="site-footer">
-		<span>© 2026 海岬晨光民宿</span>
-		<span>台東縣成功鎮海岸路 88 號</span>
-	</footer>
+                const direction = button.getAttribute("data-partner-scroll") === "prev" ? -1 : 1;
+                partnerTrack.scrollBy({
+                  left: partnerTrack.clientWidth * 0.85 * direction,
+                  behavior: "smooth",
+                });
+              });
+            });
+
+            if (partnerTrack instanceof HTMLElement) {
+              requestAnimationFrame(updatePartnerButtons);
+              partnerTrack.addEventListener("scroll", updatePartnerButtons, { passive: true });
+              window.addEventListener("resize", updatePartnerButtons);
+            }
+          </script>
+        )
+      }
+    </section>
+
+    <section id="advantages" class="section section-white">
+      <div class="advantage-showcase">
+        <div class="section-heading advantage-heading">
+          <h2>合作優勢</h2>
+          <p>我們提供的不只是曝光，更是實際成效。</p>
+        </div>
+        <div class="advantage-grid">
+          {advantages.map((item) => (
+            <article class="advantage-card">
+              <span class="advantage-icon" aria-hidden="true">
+                <img src={advantageIconUrl(item.icon)} alt="" loading="lazy" />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="cases" class="section section-light">
+      <div class="case-showcase">
+        <div class="section-heading case-heading">
+          <h2>成功案例</h2>
+          <p>與我們合作的旅宿，都看見實際成長。</p>
+        </div>
+        <div>
+          <div class="case-grid">
+            {cases.map((item) => (
+              <article class="case-card">
+                <div class="case-card-main">
+                  {item.image && <img src={item.image} alt={item.title} loading="lazy" />}
+                  <div class="case-card-body">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+                <div class="case-metrics">
+                  {item.metrics.map((metric) => (
+                    <div class="case-metric">
+                      <strong>↑ {metric.value}</strong>
+                      <span>{metric.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section section-cta">
+      <div class="cta-panel">
+        <div class="cta-visual">
+          <img class="cta-image" src={ctaPanelUrl} alt="" loading="lazy" />
+        </div>
+        <div class="cta-copy">
+          <h2>一起合作，創造更多旅程價值</h2>
+          <p>加入 Easego 聯合行銷合作夥伴，讓我們一起放大品牌影響力、提升訂房成效。</p>
+        </div>
+        <div class="cta-action">
+          <a class="button cta-button" href={cooperationUrl}>立即合作</a>
+          <span>或聯繫我們了解更多合作方案</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-main">
+        <a class="footer-brand" href="#top" aria-label="回到首頁">
+          <img src={logoUrl} alt="Easego" />
+          <span>
+            <strong>Easego 聯合行銷・合作旅宿</strong>
+            <small>攜手共創・放大價值・一起成長</small>
+          </span>
+        </a>
+
+        <nav class="footer-nav" aria-label="頁尾導覽">
+          {navItems.map((item) => (
+            <a href={item.href}>{item.label}</a>
+          ))}
+        </nav>
+
+        <div class="footer-social" aria-label="社群連結">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14 8.5h2V5.2c-.35-.05-1.55-.16-2.95-.16-2.92 0-4.92 1.78-4.92 5.05v2.85H5v3.68h3.13V24h3.84v-7.38h3l.48-3.68h-3.48v-2.48c0-1.06.29-1.96 2.03-1.96Z" />
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.3" cy="6.7" r="1" />
+            </svg>
+          </a>
+          <a href="#" aria-label="LINE">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="line-icon">
+              <path d="M12 3.25c-5.25 0-9.5 3.42-9.5 7.64 0 3.78 3.42 6.94 8.03 7.53.31.07.73.22.84.5.1.25.07.64.03.9l-.14.86c-.04.25-.2.98.82.53 1.02-.44 5.5-3.24 7.5-5.55 1.38-1.52 1.92-3.07 1.92-4.77 0-4.22-4.25-7.64-9.5-7.64Zm-4.04 9.81H5.97a.47.47 0 0 1-.47-.47V8.72c0-.26.21-.47.47-.47s.47.21.47.47v3.4h1.52c.26 0 .47.21.47.47s-.21.47-.47.47Zm2.01-.47c0 .26-.21.47-.47.47s-.47-.21-.47-.47V8.72c0-.26.21-.47.47-.47s.47.21.47.47v3.87Zm4.13 0a.47.47 0 0 1-.84.29l-1.87-2.55v2.26c0 .26-.21.47-.47.47s-.47-.21-.47-.47V8.72a.47.47 0 0 1 .84-.28l1.87 2.55V8.72c0-.26.21-.47.47-.47s.47.21.47.47v3.87Zm3.5-2.4c.26 0 .47.21.47.47s-.21.47-.47.47h-1.52v.99h1.52c.26 0 .47.21.47.47s-.21.47-.47.47h-1.99a.47.47 0 0 1-.47-.47V8.72c0-.26.21-.47.47-.47h1.99c.26 0 .47.21.47.47s-.21.47-.47.47h-1.52v1h1.52Z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <p class="footer-copy">© 2026 Easego 聯合行銷 All rights reserved.</p>
+    </div>
+  </footer>
 </Layout>
 
-<script>
-	const slider = document.querySelector("[data-slider]");
-
-	const navToggle = document.querySelector(".nav-toggle");
-	const mainNav = document.querySelector("#main-nav");
-
-	navToggle?.addEventListener("click", () => {
-		const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-		navToggle.setAttribute("aria-expanded", String(!isOpen));
-		mainNav?.classList.toggle("open", !isOpen);
-	});
-
-	mainNav?.querySelectorAll("a").forEach((link) => {
-		link.addEventListener("click", () => {
-			navToggle?.setAttribute("aria-expanded", "false");
-			mainNav.classList.remove("open");
-		});
-	});
-
-	const sidebox = document.querySelector("[data-sidebox]");
-	const sideboxToggle = sidebox?.querySelector("[data-sidebox-toggle]");
-	const sideboxClose = sidebox?.querySelector("[data-sidebox-close]");
-	const touchSideboxQuery = window.matchMedia("(hover: none), (pointer: coarse)");
-
-	const setSideboxOpen = (isOpen) => {
-		sidebox?.classList.toggle("is-open", isOpen);
-		sideboxToggle?.setAttribute("aria-expanded", String(isOpen));
-	};
-
-	sideboxToggle?.addEventListener("click", (event) => {
-		if (!touchSideboxQuery.matches) {
-			return;
-		}
-
-		event.preventDefault();
-		event.stopPropagation();
-		setSideboxOpen(!sidebox?.classList.contains("is-open"));
-	});
-
-	sideboxClose?.addEventListener("click", (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-		setSideboxOpen(false);
-		sideboxToggle?.focus();
-	});
-
-	document.addEventListener("click", (event) => {
-		if (!touchSideboxQuery.matches || !sidebox?.classList.contains("is-open")) {
-			return;
-		}
-
-		if (event.target instanceof Node && sidebox.contains(event.target)) {
-			return;
-		}
-
-		setSideboxOpen(false);
-	});
-
-	sidebox?.querySelectorAll('a[href="#"]').forEach((link) => {
-		link.addEventListener("click", (event) => {
-			event.preventDefault();
-			setSideboxOpen(false);
-		});
-	});
-
-	sidebox?.querySelectorAll('a:not([href="#"])').forEach((link) => {
-		link.addEventListener("click", () => {
-			setSideboxOpen(false);
-		});
-	});
-
-	touchSideboxQuery.addEventListener("change", () => {
-		setSideboxOpen(false);
-	});
-
-	if (slider) {
-		const slides = Array.from(slider.querySelectorAll(".hero-slide"));
-		const dots = Array.from(slider.querySelectorAll("[data-dot]"));
-		const prev = slider.querySelector("[data-prev]");
-		const next = slider.querySelector("[data-next]");
-		let current = 0;
-		let timer;
-
-		const showSlide = (target) => {
-			current = (target + slides.length) % slides.length;
-			slides.forEach((slide, index) => slide.classList.toggle("active", index === current));
-			dots.forEach((dot, index) => dot.classList.toggle("active", index === current));
-		};
-
-		const start = () => {
-			timer = window.setInterval(() => showSlide(current + 1), 5200);
-		};
-
-		const restart = () => {
-			window.clearInterval(timer);
-			start();
-		};
-
-		prev?.addEventListener("click", () => {
-			showSlide(current - 1);
-			restart();
-		});
-
-		next?.addEventListener("click", () => {
-			showSlide(current + 1);
-			restart();
-		});
-
-		dots.forEach((dot, index) => {
-			dot.addEventListener("click", () => {
-				showSlide(index);
-				restart();
-			});
-		});
-
-		start();
-	}
-
-	document.querySelectorAll("[data-room-card]").forEach((card) => {
-		const images = Array.from(card.querySelectorAll(".room-image-slider img"));
-		const prev = card.querySelector("[data-room-image-prev]");
-		const next = card.querySelector("[data-room-image-next]");
-		const dots = Array.from(card.querySelectorAll("[data-room-image-dot]"));
-		let current = 0;
-
-		const showImage = (target) => {
-			current = (target + images.length) % images.length;
-			images.forEach((image, index) => image.classList.toggle("active", index === current));
-			dots.forEach((dot, index) => dot.classList.toggle("active", index === current));
-		};
-
-		prev?.addEventListener("click", () => showImage(current - 1));
-		next?.addEventListener("click", () => showImage(current + 1));
-		dots.forEach((dot, index) => {
-			dot.addEventListener("click", () => showImage(index));
-		});
-	});
-
-	document.querySelectorAll("[data-booking-notices]").forEach((group) => {
-		const toggle = group.querySelector("[data-booking-toggle]");
-		const extraItems = Array.from(group.querySelectorAll("[data-booking-notice-extra]"));
-
-		if (!toggle || extraItems.length === 0) {
-			return;
-		}
-
-		const expandLabel = toggle.getAttribute("data-expand-label") ?? "展開更多規則";
-		const collapseLabel = toggle.getAttribute("data-collapse-label") ?? "收合規則";
-
-		toggle.addEventListener("click", () => {
-			const isExpanded = toggle.getAttribute("aria-expanded") === "true";
-			const nextExpanded = !isExpanded;
-			const label = toggle.querySelector("span");
-
-			extraItems.forEach((item) => {
-				item.classList.toggle("is-collapsed", !nextExpanded);
-			});
-			toggle.setAttribute("aria-expanded", String(nextExpanded));
-			if (label) {
-				label.textContent = nextExpanded ? collapseLabel : expandLabel;
-			}
-		});
-	});
-</script>
-
 <style>
-	:global(html) {
-		scroll-behavior: smooth;
-		scroll-padding-top: 86px;
-	}
-
-	a {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.site-header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 20;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		padding: 18px clamp(20px, 5vw, 72px);
-		box-sizing: border-box;
-		background: rgba(251, 250, 247, 0.92);
-		border-bottom: 1px solid rgba(35, 46, 44, 0.1);
-		backdrop-filter: blur(18px);
-	}
-
-	.brand,
-	.main-nav {
-		display: flex;
-		align-items: center;
-	}
-
-	.brand {
-		flex: 0 0 auto;
-		gap: 10px;
-		font-weight: 800;
-		color: #193b37;
-	}
-
-	.brand-mark {
-		display: grid;
-		width: 36px;
-		height: 36px;
-		place-items: center;
-		border-radius: 50%;
-		background: #d86f45;
-		color: #fff;
-	}
-
-	.main-nav {
-		flex: 1 1 auto;
-		min-width: 0;
-		justify-content: flex-end;
-		flex-wrap: wrap;
-		gap: 10px clamp(12px, 2vw, 28px);
-		font-size: 15px;
-		font-weight: 700;
-		color: #2c4843;
-	}
-
-	.main-nav a {
-		padding: 8px 0;
-		border-bottom: 2px solid transparent;
-	}
-
-	.main-nav a:hover {
-		border-color: #d86f45;
-	}
-
-	.nav-toggle {
-		display: none;
-		position: relative;
-		width: 42px;
-		height: 42px;
-		place-items: center;
-		border: 1px solid rgba(24, 59, 55, 0.12);
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.78);
-		box-shadow: 0 10px 26px rgba(22, 35, 33, 0.1);
-		backdrop-filter: blur(12px);
-		cursor: pointer;
-		transition:
-			background 180ms ease,
-			border-color 180ms ease,
-			box-shadow 180ms ease;
-	}
-
-	.nav-toggle span {
-		position: absolute;
-		left: 50%;
-		display: block;
-		width: 19px;
-		height: 2px;
-		border-radius: 999px;
-		background: #183b37;
-		transform: translateX(-50%);
-		transition:
-			top 180ms ease,
-			transform 180ms ease,
-			opacity 180ms ease;
-	}
-
-	.nav-toggle span:nth-child(1) {
-		top: 14px;
-	}
-
-	.nav-toggle span:nth-child(2) {
-		top: 20px;
-		width: 14px;
-	}
-
-	.nav-toggle span:nth-child(3) {
-		top: 26px;
-	}
-
-	.nav-toggle:hover,
-	.nav-toggle[aria-expanded="true"] {
-		background: rgba(255, 255, 255, 0.94);
-		border-color: rgba(24, 59, 55, 0.24);
-		box-shadow: 0 14px 32px rgba(22, 35, 33, 0.14);
-	}
-
-	.nav-toggle[aria-expanded="true"] span:nth-child(1) {
-		top: 20px;
-		transform: translateX(-50%) rotate(45deg);
-	}
-
-	.nav-toggle[aria-expanded="true"] span:nth-child(2) {
-		opacity: 0;
-		transform: translateX(-50%) scaleX(0);
-	}
-
-	.nav-toggle[aria-expanded="true"] span:nth-child(3) {
-		top: 20px;
-		transform: translateX(-50%) rotate(-45deg);
-	}
-
-	.hero {
-		height: 100vh;
-		min-height: 720px;
-		background: #193b37;
-		overflow: hidden;
-	}
-
-	.hero-slider {
-		position: relative;
-		height: 100%;
-		min-height: inherit;
-	}
-
-	.hero-slide {
-		position: absolute;
-		inset: 0;
-		display: flex;
-		align-items: center;
-		padding: 120px clamp(24px, 7vw, 110px) 86px;
-		background-position: center;
-		background-size: cover;
-		opacity: 0;
-		transition: opacity 700ms ease;
-	}
-
-	.hero-slide.active {
-		opacity: 1;
-	}
-
-	.hero-content {
-		max-width: 720px;
-		color: #fff;
-	}
-
-	.eyebrow {
-		margin: 0 0 12px;
-		color: #d86f45;
-		font-size: 13px;
-		font-weight: 900;
-		letter-spacing: 0;
-		text-transform: uppercase;
-	}
-
-	.hero-content .eyebrow {
-		color: #f5c16b;
-	}
-
-	h1,
-	h2,
-	h3,
-	p {
-		margin-top: 0;
-	}
-
-	h1 {
-		max-width: 780px;
-		margin-bottom: 22px;
-		font-size: clamp(48px, 6vw, 88px);
-		line-height: 1.06;
-		letter-spacing: 0;
-	}
-
-	h2 {
-		margin-bottom: 18px;
-		color: #183b37;
-		font-size: clamp(32px, 4vw, 52px);
-		line-height: 1.12;
-		letter-spacing: 0;
-	}
-
-	h3 {
-		color: #183b37;
-		font-size: 22px;
-	}
-
-	.hero-content p:not(.eyebrow) {
-		max-width: 580px;
-		margin-bottom: 30px;
-		font-size: 20px;
-		line-height: 1.8;
-		color: rgba(255, 255, 255, 0.9);
-	}
-
-	.hero-action,
-	.sidebox-button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 46px;
-		padding: 0 22px;
-		border-radius: 4px;
-		background: #d86f45;
-		color: #fff;
-		font-weight: 800;
-	}
-
-	.slider-controls {
-		position: absolute;
-		right: clamp(24px, 7vw, 110px);
-		bottom: 34px;
-		z-index: 2;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 18px;
-	}
-
-	.slider-controls button {
-		cursor: pointer;
-	}
-
-	.slider-controls > button {
-		width: 42px;
-		height: 42px;
-		border: 1px solid rgba(255, 255, 255, 0.5);
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.15);
-		color: #fff;
-		font-size: 28px;
-		line-height: 1;
-	}
-
-	.slider-dots {
-		display: flex;
-		gap: 8px;
-	}
-
-	.slider-dots button {
-		width: 32px;
-		height: 4px;
-		border: 0;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.45);
-	}
-
-	.slider-dots button.active {
-		background: #fff;
-	}
-
-	.sidebox {
-		position: fixed;
-		right: 24px;
-		top: 75%;
-		z-index: 15;
-		width: 92px;
-		min-height: 48px;
-		transform: translateY(-50%);
-		transition:
-			width 240ms ease,
-			filter 240ms ease;
-	}
-
-	.sidebox:hover,
-	.sidebox:focus-within,
-	.sidebox.is-open {
-		width: 176px;
-		filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
-	}
-
-	.sidebox-toggle {
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		z-index: 2;
-		display: grid;
-		width: 92px;
-		height: 48px;
-		place-items: center;
-		border: 0;
-		border-radius: 6px;
-		background: rgba(248, 137, 82, 0.64);
-		color: #fff;
-		cursor: pointer;
-		box-shadow: 0 12px 30px rgba(22, 35, 33, 0.18);
-		backdrop-filter: blur(10px);
-	}
-
-	.sidebox-toggle span {
-		display: block;
-		border: 0;
-		font-weight: 900;
-		font-size: 14px;
-		letter-spacing: 0;
-	}
-
-	.sidebox-panel {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		display: grid;
-		width: 176px;
-		box-sizing: border-box;
-		gap: 12px;
-		padding: 16px;
-		border: 1px solid rgba(24, 59, 55, 0.14);
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.96);
-		box-shadow: 0 18px 50px rgba(22, 35, 33, 0.18);
-		opacity: 0;
-		pointer-events: none;
-		transform: translate(18px, 18px) scale(0.96);
-		transform-origin: right bottom;
-		transition:
-			opacity 220ms ease,
-			transform 240ms ease;
-	}
-
-	.sidebox:hover .sidebox-panel,
-	.sidebox:focus-within .sidebox-panel,
-	.sidebox.is-open .sidebox-panel {
-		opacity: 1;
-		pointer-events: auto;
-		transform: translate(0, 0) scale(1);
-	}
-
-	.sidebox:hover .sidebox-toggle,
-	.sidebox:focus-within .sidebox-toggle,
-	.sidebox.is-open .sidebox-toggle {
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	.sidebox-close {
-		display: none;
-	}
-
-	@media (hover: none), (pointer: coarse) {
-		.sidebox:hover,
-		.sidebox:focus-within {
-			width: 92px;
-			filter: none;
-		}
-
-		.sidebox.is-open {
-			width: min(176px, calc(100vw - 32px));
-			filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
-		}
-
-		.sidebox:hover .sidebox-panel,
-		.sidebox:focus-within .sidebox-panel {
-			opacity: 0;
-			pointer-events: none;
-			transform: translate(18px, 18px) scale(0.96);
-		}
-
-		.sidebox.is-open .sidebox-panel {
-			opacity: 1;
-			pointer-events: auto;
-			transform: translate(0, 0) scale(1);
-		}
-
-		.sidebox:hover .sidebox-toggle,
-		.sidebox:focus-within .sidebox-toggle {
-			opacity: 1;
-			pointer-events: auto;
-		}
-
-		.sidebox.is-open .sidebox-toggle {
-			opacity: 0;
-			pointer-events: none;
-		}
-
-		.sidebox-close {
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			z-index: 2;
-			display: grid;
-			width: 32px;
-			height: 32px;
-			place-items: center;
-			border: 0;
-			border-radius: 6px;
-			background: transparent;
-			color: #183b37;
-			cursor: pointer;
-		}
-
-		.sidebox-close span {
-			position: absolute;
-			width: 16px;
-			height: 2px;
-			border-radius: 999px;
-			background: currentColor;
-		}
-
-		.sidebox-close span:first-child {
-			transform: rotate(45deg);
-		}
-
-		.sidebox-close span:last-child {
-			transform: rotate(-45deg);
-		}
-	}
-
-	.sidebox-section {
-		padding-bottom: 12px;
-		border-bottom: 1px solid rgba(24, 59, 55, 0.12);
-	}
-
-	.sidebox-section:last-child {
-		padding-bottom: 0;
-		border-bottom: 0;
-	}
-
-	.sidebox-section p {
-		margin: 0;
-		color: #60706c;
-		font-size: 12px;
-		font-weight: 900;
-		letter-spacing: 0;
-		text-transform: uppercase;
-	}
-
-	.sidebox-reserve {
-		padding-top: 0;
-	}
-
-	.sidebox-reserve p {
-		margin-bottom: 10px;
-		color: #183b37;
-		font-size: 14px;
-		text-transform: none;
-	}
-
-	.sidebox-reserve .sidebox-button {
-		width: 100%;
-		min-width: 0;
-		padding-right: 0px;
-		padding-left: 0px;
-	}
-
-	.sidebox-icons {
-		display: flex;
-		justify-content: space-between;
-		gap: 7px;
-		margin-top: 0;
-	}
-
-	.sidebox-icons a {
-		display: grid;
-		width: 42px;
-		height: 42px;
-		place-items: center;
-		border: 1px solid rgba(24, 59, 55, 0.16);
-		border-radius: 6px;
-		background: #f7f4ef;
-		color: #183b37;
-		font-weight: 900;
-		font-size: 13px;
-		transition:
-			background 180ms ease,
-			color 180ms ease,
-			transform 180ms ease;
-	}
-
-	.sidebox-icons a:hover {
-		background: #fff;
-		border-color: rgba(216, 111, 69, 0.42);
-		transform: translateY(-2px);
-	}
-
-	.sidebox-icons img {
-		display: block;
-		width: 24px;
-		height: 24px;
-		object-fit: contain;
-		filter: grayscale(1) saturate(0) contrast(0.88);
-		opacity: 0.72;
-		transition:
-			filter 180ms ease,
-			opacity 180ms ease;
-	}
-
-	.sidebox-icons a:hover img {
-		filter: grayscale(0.35) saturate(0.65);
-		opacity: 0.95;
-	}
-
-	.section {
-		padding: 96px clamp(24px, 7vw, 110px);
-	}
-
-	.section-muted {
-		background: #f2eee7;
-	}
-
-	.section-inner {
-		max-width: 1160px;
-		margin: 0 auto;
-	}
-
-	.section-heading {
-		max-width: 680px;
-		margin-bottom: 34px;
-	}
-
-	.news-grid,
-	.room-grid {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 22px;
-	}
-
-	.news-grid article,
-	.room-card,
-	.booking-panel {
-		border: 1px solid rgba(24, 59, 55, 0.1);
-		border-radius: 8px;
-		background: #fff;
-		box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
-	}
-
-	.news-grid article {
-		overflow: hidden;
-	}
-
-	.news-grid img {
-		display: block;
-		width: 100%;
-		aspect-ratio: 16 / 10;
-		object-fit: cover;
-	}
-
-	.news-grid article div {
-		padding: 24px 26px 28px;
-	}
-
-	time {
-		display: inline-block;
-		margin-bottom: 18px;
-		color: #d86f45;
-		font-size: 14px;
-		font-weight: 900;
-	}
-
-	.news-grid p,
-	.section-copy p,
-	.booking-panel p,
-	.location-content p,
-	.room-card p {
-		color: #5d6d69;
-		line-height: 1.8;
-	}
-
-	.split-layout,
-	.location-content,
-	.booking-panel {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
-		gap: clamp(32px, 6vw, 76px);
-		max-width: 1160px;
-		margin: 0 auto;
-		align-items: center;
-	}
-
-	.about-photo {
-		min-height: 520px;
-		border-radius: 8px;
-		background:
-			linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)),
-			url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=80")
-				center / cover;
-	}
-
-	.section-copy {
-		max-width: 530px;
-	}
-
-	.stats {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 14px;
-		margin-top: 32px;
-	}
-
-	.stats div {
-		padding: 18px;
-		border-left: 4px solid #d86f45;
-		background: #f5f1ea;
-	}
-
-	.stats strong,
-	.stats span {
-		display: block;
-	}
-
-	.stats strong {
-		color: #183b37;
-		font-size: 28px;
-	}
-
-	.stats span {
-		margin-top: 4px;
-		color: #60706c;
-		font-size: 14px;
-	}
-
-	.room-card {
-		overflow: hidden;
-		transition: box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
-	}
-
-	.room-card:hover {
-		box-shadow: 0 24px 56px rgba(35, 46, 44, 0.16);
-	}
-
-	.room-image-slider {
-		position: relative;
-		aspect-ratio: 16 / 9;
-		overflow: hidden;
-		background: #183b37;
-	}
-
-	.room-image-slider img {
-		position: absolute;
-		inset: 0;
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		opacity: 0;
-		transition:
-			opacity 300ms ease,
-			transform 400ms ease;
-	}
-
-	.room-image-slider img.active {
-		opacity: 1;
-	}
-
-	.room-card:hover .room-image-slider img.active {
-		transform: scale(1.1);
-	}
-
-	.room-image-controls {
-		position: absolute;
-		inset: 0;
-		z-index: 2;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0 12px;
-		pointer-events: none;
-	}
-
-	.room-image-controls button {
-		display: grid;
-		width: 34px;
-		height: 48px;
-		place-items: center;
-		border: 0;
-		background: transparent;
-		color: #fff;
-		cursor: pointer;
-		font-size: 38px;
-		line-height: 1;
-		opacity: 0.72;
-		pointer-events: auto;
-		text-shadow: 0 2px 12px rgba(13, 31, 35, 0.72);
-		transition:
-			opacity 180ms ease,
-			transform 180ms ease;
-	}
-
-	.room-image-controls button:hover {
-		opacity: 1;
-		transform: scale(1.12);
-	}
-
-	.room-card .room-image-dots {
-		position: absolute;
-		left: 50%;
-		bottom: 13px;
-		z-index: 3;
-		display: flex;
-		gap: 7px;
-		transform: translateX(-50%);
-		padding: 5px;
-	}
-
-	.room-image-dots button {
-		width: 7px;
-		height: 7px;
-		padding: 0;
-		border: 0;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.52);
-		cursor: pointer;
-	}
-
-	.room-image-dots button.active {
-		background: #fff;
-	}
-
-	.room-card div {
-		padding: 24px;
-	}
-
-	.room-description {
-		margin-bottom: 0;
-	}
-
-	.booking-panel {
-		padding: clamp(28px, 5vw, 56px);
-		background:
-			linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
-			url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80")
-				center / cover;
-	}
-
-	.booking-notices {
-		display: grid;
-		gap: 8px;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.booking-notices-wrap {
-		display: grid;
-		gap: 18px;
-		align-content: start;
-	}
-
-	.booking-notices li {
-		position: relative;
-		padding: 0 0 0 18px;
-		color: #41534f;
-		font-size: 14px;
-		line-height: 1.7;
-	}
-
-	.booking-notices li.is-collapsed {
-		display: none;
-	}
-
-	.booking-notices li::before {
-		position: absolute;
-		top: 0.72em;
-		left: 0;
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: #d86f45;
-		content: "";
-		transform: translateY(-50%);
-	}
-
-	.booking-toggle {
-		display: inline-flex;
-		align-items: center;
-		justify-self: end;
-		gap: 6px;
-		border: 0;
-		padding: 0;
-		background: transparent;
-		color: #d86f45;
-		font: inherit;
-		font-size: 14px;
-		font-weight: 900;
-		cursor: pointer;
-		transition: color 0.2s ease;
-	}
-
-	.booking-toggle:hover,
-	.booking-toggle:focus-visible {
-		color: #183b37;
-		outline: none;
-	}
-
-	.booking-toggle::after {
-		content: "↓";
-		font-size: 13px;
-		line-height: 1;
-		transition: transform 0.2s ease;
-	}
-
-	.booking-toggle[aria-expanded="true"]::after {
-		transform: rotate(180deg);
-	}
-
-	.booking-list {
-		display: grid;
-		gap: 12px;
-	}
-
-	.booking-list div {
-		display: flex;
-		justify-content: space-between;
-		gap: 20px;
-		padding: 16px 0;
-		border-bottom: 1px solid rgba(24, 59, 55, 0.14);
-	}
-
-	.booking-list span {
-		color: #d86f45;
-		font-weight: 900;
-	}
-
-	.booking-list strong {
-		color: #183b37;
-		text-align: right;
-	}
-
-	.section-location {
-		background: #183b37;
-	}
-
-	.section-location h2,
-	.section-location p {
-		color: #fff;
-	}
-
-	.section-location p {
-		color: rgba(255, 255, 255, 0.78);
-	}
-
-	.map-card {
-		display: grid;
-		min-height: 360px;
-		place-items: center;
-		padding: 34px;
-		border-radius: 8px;
-		background:
-			linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)),
-			url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80")
-				center / cover;
-		color: #fff;
-		text-align: center;
-	}
-
-	.map-card span,
-	.map-card strong {
-		display: block;
-		padding: 8px 14px;
-		background: rgba(24, 59, 55, 0.78);
-	}
-
-	.map-card strong {
-		margin-top: 8px;
-		font-size: 26px;
-	}
-
-	.site-footer {
-		display: flex;
-		justify-content: space-between;
-		gap: 20px;
-		padding: 28px clamp(24px, 7vw, 110px);
-		background: #102522;
-		color: rgba(255, 255, 255, 0.76);
-	}
-
-	@media (max-width: 980px) {
-		.site-header {
-			position: sticky;
-			flex-direction: column;
-			gap: 14px;
-			padding: 14px 18px;
-		}
-
-		.main-nav {
-			width: 100%;
-			justify-content: center;
-			gap: 10px 18px;
-			overflow: visible;
-			padding-bottom: 0;
-			white-space: normal;
-		}
-
-		.hero,
-		.hero-slider {
-			min-height: 760px;
-		}
-
-		.hero-slide {
-			padding: 110px 24px 110px;
-		}
-
-		.sidebox {
-			top: auto;
-			right: 16px;
-			bottom: 16px;
-			left: auto;
-			width: 92px;
-			min-height: 48px;
-			transform: none;
-		}
-
-		.sidebox-panel {
-			width: min(176px, calc(100vw - 32px));
-		}
-
-		.split-layout,
-		.location-content,
-		.booking-panel {
-			grid-template-columns: 1fr;
-		}
-
-		.news-grid,
-		.room-grid {
-			display: flex;
-			gap: 18px;
-			overflow-x: auto;
-			padding: 4px 2px 24px;
-			scroll-snap-type: x proximity;
-			scrollbar-width: none;
-		}
-
-		.news-grid::-webkit-scrollbar,
-		.room-grid::-webkit-scrollbar {
-			display: none;
-		}
-
-		.news-grid article,
-		.room-grid .room-card {
-			flex: 0 0 min(82vw, 460px);
-			scroll-snap-align: start;
-		}
-
-		.room-card:hover {
-			box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
-		}
-
-		.about-photo {
-			min-height: 360px;
-		}
-
-		.site-footer {
-			flex-direction: column;
-			padding-bottom: 112px;
-		}
-	}
-
-	@media (max-width: 640px) {
-		.site-header {
-			position: fixed;
-			flex-direction: row;
-			gap: 12px;
-		}
-
-		.nav-toggle {
-			display: grid;
-		}
-
-		.main-nav {
-			position: absolute;
-			top: calc(100% + 8px);
-			right: 16px;
-			display: grid;
-			width: min(220px, calc(100vw - 32px));
-			gap: 0;
-			padding: 8px;
-			border: 1px solid rgba(24, 59, 55, 0.12);
-			border-radius: 8px;
-			background: rgba(255, 255, 255, 0.96);
-			box-shadow: 0 18px 42px rgba(22, 35, 33, 0.16);
-			opacity: 0;
-			pointer-events: none;
-			transform: translateY(-8px);
-			transition:
-				opacity 180ms ease,
-				transform 180ms ease;
-		}
-
-		.main-nav.open {
-			opacity: 1;
-			pointer-events: auto;
-			transform: translateY(0);
-		}
-
-		.main-nav a {
-			padding: 12px 14px;
-			border-bottom: 0;
-			border-radius: 6px;
-		}
-
-		.main-nav a:hover {
-			background: #f2eee7;
-			border-color: transparent;
-		}
-
-		h1 {
-			font-size: 42px;
-		}
-
-		h2 {
-			font-size: 34px;
-		}
-
-		.hero-content p:not(.eyebrow) {
-			font-size: 17px;
-		}
-
-		.slider-controls {
-			right: auto;
-			left: 50%;
-			justify-content: center;
-			gap: 14px;
-			transform: translateX(-50%);
-		}
-
-		.section {
-			padding: 72px 20px;
-		}
-
-		.news-grid,
-		.room-grid {
-			display: grid;
-			grid-template-columns: 1fr;
-			overflow: visible;
-			padding: 0;
-		}
-
-		.news-grid article,
-		.room-grid .room-card {
-			flex: none;
-		}
-
-		.stats {
-			grid-template-columns: 1fr;
-		}
-
-		.booking-list div {
-			display: grid;
-			gap: 6px;
-		}
-
-		.booking-list strong {
-			text-align: left;
-		}
-	}
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px clamp(20px, 4vw, 70px);
+    background: rgba(251, 250, 247, 0.94);
+    border-bottom: 1px solid rgba(24, 59, 55, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    color: #113532;
+  }
+
+  .brand-logo {
+    display: block;
+    width: auto;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2b4f49;
+  }
+
+  .main-nav a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .main-nav a:hover {
+    color: #0f5e58;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(360px, 0.86fr) minmax(520px, 1.14fr);
+    align-items: center;
+    min-height: calc(100vh - 96px);
+    padding: 0px clamp(28px, 6vw, 80px) 70px;
+    background:
+      radial-gradient(circle at 74% 28%, rgba(74, 181, 210, 0.18), transparent 28%),
+      linear-gradient(180deg, #ffffff 0%, #f5fbfc 100%);
+  }
+
+  .hero-copy {
+    max-width: 600px;
+  }
+
+  .eyebrow {
+    margin: 0 0 16px;
+    color: #0f5e58;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0 0 18px;
+    font-size: clamp(46px, 5.6vw, 82px);
+    line-height: 1.02;
+    color: #172e2b;
+  }
+
+  h1 span {
+    display: block;
+    color: #087d8b;
+  }
+
+  p {
+    margin: 0;
+    color: #3b514c;
+    line-height: 1.75;
+    font-size: 18px;
+  }
+
+  .hero-slogan {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+    color: #172e2b;
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 900;
+  }
+
+  .hero-slogan::before,
+  .hero-slogan::after {
+    display: block;
+    width: clamp(26px, 4vw, 54px);
+    height: 2px;
+    background: #0f8792;
+    content: "";
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .button:hover {
+    transform: translateY(-1px);
+  }
+
+  .button-primary {
+    background: #0f5e58;
+    color: #fff;
+  }
+
+  .button-outline {
+    min-height: 44px;
+    border: 1px solid rgba(15, 94, 88, 0.36);
+    background: rgba(255, 255, 255, 0.76);
+    color: #0f5e58;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 38px;
+    max-width: 640px;
+  }
+
+  .hero-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 0 24px;
+    border-right: 1px solid rgba(15, 94, 88, 0.14);
+  }
+
+  .hero-stat:first-child {
+    padding-left: 0;
+  }
+
+  .hero-stat:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .stat-icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    place-items: center;
+    color: #087d8b;
+  }
+
+  .stat-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+  }
+
+  .stat-copy {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .hero-stat strong {
+    display: block;
+    min-width: 0;
+    color: #087d8b;
+    font-size: clamp(24px, 2.4vw, 34px);
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .stat-copy span {
+    display: block;
+    min-width: 0;
+    color: #4e6a62;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .hero-map {
+    min-width: 0;
+  }
+
+  .map-card {
+    position: relative;
+    min-height: 560px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #e5f6ff;
+    box-shadow: 0 28px 72px rgba(8, 88, 115, 0.12);
+  }
+
+  .map-card::before {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(
+        90deg,
+        #e5f6ff 0%,
+        rgba(229, 246, 255, 0) 14%,
+        rgba(229, 246, 255, 0) 86%,
+        #e5f6ff 100%
+      ),
+      linear-gradient(
+        180deg,
+        #e5f6ff 0%,
+        rgba(229, 246, 255, 0) 12%,
+        rgba(229, 246, 255, 0) 88%,
+        #e5f6ff 100%
+      );
+    content: "";
+    pointer-events: none;
+  }
+
+  .map-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .region-badge {
+    position: absolute;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .region-badge:hover {
+    transform: translateY(-3px);
+  }
+
+  .badge-photo {
+    position: relative;
+    z-index: 1;
+    width: 138px;
+    height: 115px;
+    flex: 0 0 auto;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    object-fit: cover;
+    box-shadow: 0 14px 34px rgba(8, 88, 115, 0.2);
+    transform: translate(18px, -22px);
+  }
+
+  .badge-count {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: 78px;
+    height: 78px;
+    margin-left: -16px;
+    place-items: center;
+    padding: 10px;
+    border: 1px solid rgba(8, 125, 139, 0.12);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 16px 40px rgba(8, 88, 115, 0.18);
+  }
+
+  .badge-count span {
+    color: #087d8b;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .badge-count strong {
+    color: #11405c;
+    font-size: 23px;
+    line-height: 1.1;
+  }
+
+  .region-badge.north {
+    top: 5%;
+    left: 45%;
+  }
+
+  .region-badge.central {
+    top: 25%;
+    left: 30%;
+  }
+
+  .region-badge.south {
+    top: 70%;
+    left: 35%;
+  }
+
+  .region-badge.east {
+    right: 10%;
+    top: 40%;
+  }
+
+  .region-badge.east span,
+  .region-badge.east strong {
+    color: #cf4f39;
+  }
+
+  .region-badge.north,
+  .region-badge.east,
+  .region-badge.islands {
+    flex-direction: row-reverse;
+  }
+
+  .region-badge.north .badge-count,
+  .region-badge.east .badge-count,
+  .region-badge.islands .badge-count {
+    margin-right: -16px;
+    margin-left: 0;
+  }
+
+  .region-badge.north .badge-photo,
+  .region-badge.east .badge-photo,
+  .region-badge.islands .badge-photo {
+    transform: translate(-18px, -22px);
+  }
+
+  .region-badge.islands {
+    top: 48%;
+    left: 14%;
+  }
+
+  .region-badge.islands span,
+  .region-badge.islands strong {
+    color: #3154b8;
+  }
+
+  .region-badge.overseas {
+    top: 9%;
+    left: 8%;
+  }
+
+  .region-badge.overseas span,
+  .region-badge.overseas strong {
+    color: #7f4bb7;
+  }
+
+  .section {
+    padding: 96px clamp(28px, 6vw, 80px);
+  }
+
+  .section-light {
+    background: #faf8f4;
+  }
+
+  .section-heading {
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+
+  .section-heading h2 {
+    margin: 14px 0 18px;
+    font-size: clamp(34px, 4vw, 48px);
+    color: #172e2b;
+  }
+
+  .case-grid {
+    display: grid;
+    gap: 22px;
+  }
+
+  .partner-showcase {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 30px;
+    align-items: center;
+  }
+
+  .partner-heading {
+    margin-bottom: 0;
+  }
+
+  .partner-heading .button {
+    margin-top: 26px;
+  }
+
+  .partner-track-shell {
+    position: relative;
+    min-width: 0;
+  }
+
+  .partner-track {
+    display: grid;
+    grid-auto-columns: calc((100% - 104px) / 5.01);
+    grid-auto-flow: column;
+    gap: 16px;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 4px 0 14px;
+    scroll-behavior: smooth;
+    scroll-padding-inline: 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .partner-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .partner-card {
+    min-width: 0;
+    border: 1px solid rgba(17, 53, 50, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 16px 38px rgba(17, 53, 50, 0.08);
+    scroll-snap-align: start;
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .partner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 52px rgba(17, 53, 50, 0.13);
+  }
+
+  .partner-card a {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .partner-card-image {
+    position: relative;
+  }
+
+  .partner-card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+  }
+
+  .partner-location {
+    position: absolute;
+    top: 10px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #0f5e58;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .partner-location {
+    left: 10px;
+    max-width: calc(100% - 20px);
+    padding: 0 9px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .partner-card-body {
+    min-height: 140px;
+    padding: 18px 14px 20px;
+  }
+
+  .partner-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    color: #4e6a62;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .partner-card-meta span:first-child {
+    color: #f4a400;
+  }
+
+  .partner-card h3 {
+    margin: 0 0 8px;
+    color: #172e2b;
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .partner-card p {
+    display: -webkit-box;
+    min-height: 44px;
+    margin: 0;
+    overflow: hidden;
+    color: #5a6f68;
+    font-size: 13px;
+    line-height: 1.65;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .partner-scroll-controls {
+    pointer-events: none;
+  }
+
+  .partner-scroll-button {
+    position: absolute;
+    top: 50%;
+    z-index: 6;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid rgba(15, 94, 88, 0.14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 16px 34px rgba(17, 53, 50, 0.14);
+    color: #172e2b;
+    cursor: pointer;
+    font-size: 30px;
+    line-height: 1;
+    pointer-events: auto;
+    transform: translateY(-50%);
+    transition:
+      background 180ms ease,
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .partner-scroll-button:hover {
+    background: #0f5e58;
+    color: #fff;
+    transform: translateY(-50%) scale(1.04);
+  }
+
+  .partner-scroll-button.is-hidden,
+  .partner-scroll-button:disabled {
+    display: none;
+  }
+
+  .partner-scroll-button:first-child {
+    left: -14px;
+  }
+
+  .partner-scroll-button:last-child {
+    right: -14px;
+  }
+
+  .advantage-showcase {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: 30px;
+    align-items: center;
+  }
+
+  .advantage-heading {
+    margin-bottom: 0;
+  }
+
+  .advantage-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .advantage-card {
+    display: grid;
+    gap: 12px;
+    min-height: 238px;
+    padding: 28px 18px 24px;
+    border: 1px solid rgba(17, 53, 50, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 16px 38px rgba(17, 53, 50, 0.07);
+    text-align: center;
+  }
+
+  .advantage-icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    justify-self: center;
+  }
+
+  .advantage-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .advantage-card h3 {
+    margin: 0;
+    color: #0f5e58;
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .advantage-card p {
+    margin: 0;
+    color: #556b63;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .case-showcase {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: 30px;
+    align-items: center;
+  }
+
+  .case-heading {
+    margin-bottom: 0;
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .case-card {
+    display: grid;
+    grid-template-rows: 1.5fr 1fr;
+    gap: 18px;
+    min-height: 238px;
+    padding: 22px 18px;
+    border: 1px solid rgba(17, 53, 50, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 16px 38px rgba(17, 53, 50, 0.07);
+  }
+
+  .case-card-main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .case-card img {
+    width: 100%;
+    height: 104px;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+
+  .case-card-body {
+    min-width: 0;
+	padding: 15px;
+  }
+
+  .case-card h3 {
+    margin: 0 0 10px;
+    color: #172e2b;
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .case-card p {
+    margin: 0;
+    color: #556b63;
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+
+  .case-metrics {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid rgba(17, 53, 50, 0.08);
+	justify-content: space-around;
+  }
+
+  .case-metric strong {
+    display: block;
+    color: #087d8b;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .case-metric span {
+    display: block;
+    margin-top: 6px;
+    color: #51645f;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  .section-cta {
+    background: #f7fbfc;
+    color: #fff;
+  }
+
+  .cta-panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(28px, 5vw, 56px);
+    max-width: 1240px;
+    margin: 0 auto;
+    min-height: 250px;
+    overflow: hidden;
+    padding: 46px clamp(30px, 5vw, 58px);
+    border-radius: 24px;
+    background:
+      linear-gradient(90deg, rgba(0, 116, 128, 0.96) 0%, rgba(0, 126, 140, 0.9) 48%, rgba(0, 85, 100, 0.7) 100%),
+      radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.24), transparent 22%),
+      #087d8b;
+    box-shadow: 0 28px 70px rgba(8, 88, 115, 0.18);
+  }
+
+  .cta-panel::after {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 0%, transparent 62%, rgba(255, 255, 255, 0.16) 100%),
+      radial-gradient(circle at 86% 75%, rgba(255, 255, 255, 0.16), transparent 24%);
+    content: "";
+    pointer-events: none;
+  }
+
+  .cta-visual,
+  .cta-copy,
+  .cta-action {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-visual {
+    display: inline-flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .cta-image {
+    display: block;
+    width: clamp(128px, 13vw, 176px);
+    height: auto;
+    object-fit: contain;
+  }
+
+  .cta-copy {
+    min-width: 0;
+  }
+
+  .section-cta h2 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: clamp(30px, 3.4vw, 48px);
+    line-height: 1.15;
+  }
+
+  .section-cta p {
+    max-width: 720px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 18px;
+  }
+
+  .cta-action {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    min-width: 240px;
+  }
+
+  .cta-button {
+    min-width: 220px;
+    min-height: 64px;
+    background: #fff;
+    color: #0f5e58;
+    font-size: 20px;
+    box-shadow: 0 18px 42px rgba(0, 42, 50, 0.18);
+  }
+
+  .cta-action span {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .site-footer {
+    padding: 0 clamp(18px, 3vw, 32px) 28px;
+    background: linear-gradient(180deg, #087d8b 0, #087d8b 12px, #081827 12px, #03070d 100%);
+  }
+
+  .footer-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 46px clamp(24px, 4vw, 44px) 24px;
+    border-radius: 0 0 24px 24px;
+    background: linear-gradient(180deg, #0b1d2f 0%, #05111d 100%);
+    color: #fff;
+    box-shadow: 0 24px 70px rgba(3, 16, 27, 0.28);
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: minmax(270px, 1.2fr) minmax(360px, 1fr) auto;
+    align-items: center;
+    gap: clamp(26px, 5vw, 70px);
+    padding-bottom: 34px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .footer-brand img {
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 8px;
+  }
+
+  .footer-brand span {
+    display: grid;
+    gap: 8px;
+  }
+
+  .footer-brand strong {
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .footer-brand small {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+    justify-content: center;
+    gap: clamp(24px, 4vw, 56px);
+  }
+
+  .footer-nav a {
+    color: rgba(255, 255, 255, 0.84);
+    font-weight: 900;
+    text-decoration: none;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .footer-nav a:hover {
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .footer-social {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .footer-social a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(123, 228, 237, 0.7);
+    color: #7be4ed;
+    transform: translateY(-2px);
+  }
+
+  .footer-social svg {
+    width: 32px;
+    height: 32px;
+    fill: currentColor;
+  }
+
+  .footer-social a:nth-child(2) svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+  }
+
+  .footer-social .line-icon {
+    width: 32px;
+    height: 32px;
+    fill: currentColor;
+  }
+
+  .footer-copy {
+    margin-top: 22px;
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  @media (max-width: 1080px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      padding-top: 100px;
+    }
+
+    .hero-map {
+      width: 100%;
+    }
+
+    .badge-photo {
+      display: none;
+    }
+
+    .badge-count {
+      margin-left: 0;
+    }
+
+    .region-badge.north .badge-count,
+    .region-badge.east .badge-count,
+    .region-badge.islands .badge-count {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .partner-showcase {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .partner-heading {
+      max-width: 680px;
+    }
+
+    .partner-track {
+      grid-auto-columns: calc((100% - 48px) / 3.25);
+    }
+
+    .advantage-showcase {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .advantage-heading {
+      max-width: 620px;
+    }
+
+    .advantage-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .case-showcase {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .case-heading {
+      max-width: 620px;
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .site-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .main-nav {
+      justify-content: center;
+    }
+
+    .hero {
+      padding: 80px 20px 40px;
+    }
+
+    .hero-copy {
+      max-width: 100%;
+    }
+
+    .hero-slogan {
+      font-size: 18px;
+    }
+
+    .hero-slogan::before,
+    .hero-slogan::after {
+      width: 22px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .hero-stat {
+      padding: 0;
+      border-right: 0;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .map-card {
+      min-height: 420px;
+      border-radius: 22px;
+    }
+
+    .map-image {
+      min-height: 420px;
+    }
+
+    .region-badge {
+      gap: 0;
+    }
+
+    .badge-photo {
+      display: none;
+    }
+
+    .badge-count {
+      width: 58px;
+      height: 58px;
+      margin-left: 0;
+      padding: 7px;
+    }
+
+    .region-badge.north .badge-count,
+    .region-badge.east .badge-count,
+    .region-badge.islands .badge-count {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .badge-count span {
+      font-size: 13px;
+    }
+
+    .badge-count strong {
+      font-size: 17px;
+    }
+
+    .region-badge.north {
+      top: 5%;
+      left: 45%;
+    }
+
+    .region-badge.central {
+      top: 25%;
+      left: 30%;
+    }
+
+    .region-badge.south {
+      top: 70%;
+      left: 35%;
+    }
+
+    .region-badge.east {
+      top: 43%;
+      right: 4%;
+    }
+
+    .region-badge.islands {
+      top: 49%;
+      left: 5%;
+    }
+
+    .region-badge.overseas {
+      top: 9%;
+      left: 8%;
+    }
+
+    .partner-track {
+      grid-auto-columns: minmax(230px, 78%);
+    }
+
+    .partner-scroll-button {
+      width: 38px;
+      height: 38px;
+      font-size: 26px;
+    }
+
+    .partner-scroll-button:first-child {
+      left: -6px;
+    }
+
+    .partner-scroll-button:last-child {
+      right: -6px;
+    }
+
+    .advantage-grid,
+    .case-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .case-card {
+      min-height: auto;
+    }
+
+    .case-card img {
+      height: 90px;
+    }
+
+    .cta-panel {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 26px;
+      text-align: center;
+    }
+
+    .cta-visual {
+      justify-content: center;
+    }
+
+    .cta-action {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .cta-button {
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .section-cta p {
+      margin: 0 auto;
+    }
+
+    .site-footer {
+      padding-inline: 14px;
+    }
+
+    .footer-inner {
+      padding: 34px 20px 22px;
+    }
+
+    .footer-main {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 26px;
+      text-align: center;
+    }
+
+    .footer-brand {
+      flex-direction: column;
+    }
+
+    .footer-nav {
+      grid-template-columns: repeat(2, max-content);
+      gap: 16px 28px;
+    }
+
+    .footer-social {
+      gap: 18px;
+    }
+  }
 </style>

@@ -1,0 +1,1727 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import cooperationData from "../../data/cooperation-homestays.json";
+
+const regions = cooperationData.regions;
+
+export function getStaticPaths() {
+	const allHomestays = cooperationData.regions.flatMap((region) =>
+		region.homestays.map((homestay) => homestay),
+	);
+
+	return allHomestays.map((homestay) => ({
+		params: { slug: homestay.slug },
+	}));
+}
+
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`;
+const listUrl = `${baseUrl}cooperation/`;
+const allHomestays = regions.flatMap((region) =>
+	region.homestays.map((homestay) => ({
+		...homestay,
+		regionId: region.id,
+		regionLabel: region.label,
+	})),
+);
+const featuredHomestay =
+	allHomestays.find((homestay) => homestay.slug === Astro.params.slug) ?? allHomestays[0];
+
+const navItems = [
+	{ label: "最新消息", href: "#news" },
+	{ label: "關於我們", href: "#about" },
+	{ label: "客房介紹", href: "#rooms" },
+	{ label: "訂房資訊", href: "#booking" },
+	{ label: "民宿位置", href: "#location" },
+	{ label: "回列表", href: listUrl },
+];
+
+const slides = featuredHomestay.slides;
+const rooms = featuredHomestay.rooms;
+const news = featuredHomestay.news;
+const bookingRows = featuredHomestay.bookingRows;
+const bookingNotices = featuredHomestay.bookingNotices;
+const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
+---
+
+<Layout>
+	<header class="site-header">
+		<a class="brand" href="#top" aria-label="回到首頁">
+			<span class:list={["brand-mark", { "brand-mark-logo": featuredHomestay.logo }]}>
+				{
+					featuredHomestay.logo ? (
+						<img src={featuredHomestay.logo} alt={`${featuredHomestay.name} logo`} />
+					) : (
+						fallbackAvatarText
+					)
+				}
+			</span>
+			<span>{featuredHomestay.name}</span>
+		</a>
+		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+		<nav id="main-nav" class="main-nav" aria-label="主要導覽">
+			{navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+		</nav>
+	</header>
+
+	<main id="top">
+		<section class="hero" aria-label="民宿形象輪播">
+			<div class="hero-slider" data-slider>
+				{
+					slides.map((slide, index) => (
+						<article
+							class:list={["hero-slide", { active: index === 0 }]}
+							style={`background-image: linear-gradient(90deg, rgba(13, 31, 35, .74), rgba(13, 31, 35, .2)), url('${slide.image}')`}
+						>
+							<div class="hero-content">
+								<p class="eyebrow">{featuredHomestay.englishName}</p>
+								<h1>{slide.title}</h1>
+								<p>{slide.subtitle}</p>
+								<a class="hero-action" href="#booking">查看訂房資訊</a>
+							</div>
+						</article>
+					))
+				}
+				<div class="slider-controls" aria-label="輪播控制">
+					<button type="button" data-prev aria-label="上一張">‹</button>
+					<div class="slider-dots">
+						{
+							slides.map((_, index) => (
+								<button
+									type="button"
+									class:list={{ active: index === 0 }}
+									data-dot={index}
+									aria-label={`切換到第 ${index + 1} 張`}
+								/>
+							))
+						}
+					</div>
+					<button type="button" data-next aria-label="下一張">›</button>
+				</div>
+			</div>
+		</section>
+
+		<aside class="sidebox" data-sidebox aria-label="快速訂房資訊">
+			<button
+				class="sidebox-toggle"
+				type="button"
+				aria-label="開啟快速訂房"
+				aria-expanded="false"
+				data-sidebox-toggle
+			>
+				<span>快速訂房</span>
+			</button>
+			<div class="sidebox-panel">
+				<button class="sidebox-close" type="button" aria-label="關閉快速訂房" data-sidebox-close>
+					<span></span>
+					<span></span>
+				</button>
+				<div class="sidebox-section sidebox-reserve">
+					<p>快速訂房</p>
+					<a class="sidebox-button" href="#booking">Reserve</a>
+				</div>
+				<div class="sidebox-section">
+					<div class="sidebox-icons" aria-label="訂房平台連結">
+						<a href={featuredHomestay.links.booking} aria-label="Booking.com">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=booking.com"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+						<a href={featuredHomestay.links.agoda} aria-label="Agoda">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=agoda.com"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+						<a href={featuredHomestay.links.eztravel} aria-label="易遊網">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+					</div>
+				</div>
+				<div class="sidebox-section">
+					<div class="sidebox-icons" aria-label="社群連結">
+						<a href={featuredHomestay.links.facebook} aria-label="Facebook">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+						<a href={featuredHomestay.links.instagram} aria-label="Instagram">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=instagram.com"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+						<a href={featuredHomestay.links.line} aria-label="LINE">
+							<img
+								src="https://www.google.com/s2/favicons?sz=64&domain=line.me"
+								alt=""
+								loading="lazy"
+							/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</aside>
+
+		<section id="news" class="section section-muted">
+			<div class="section-inner">
+				<div class="section-heading">
+					<p class="eyebrow">News</p>
+					<h2>最新消息</h2>
+				</div>
+				<div class="news-grid">
+					{
+						news.map((item) => (
+							<article>
+								<img src={item.image} alt={`${item.title}照片`} loading="lazy" />
+								<div>
+									<time datetime={item.date}>{item.displayDate}</time>
+									<h3>{item.title}</h3>
+									<p>{item.description}</p>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section id="about" class="section">
+			<div class="split-layout">
+				<div
+					class="about-photo"
+					aria-label="民宿公共空間照片"
+					style={`background-image: linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)), url('${featuredHomestay.gallery[0]}')`}
+				></div>
+				<div class="section-copy">
+					<p class="eyebrow">About</p>
+					<h2>關於{featuredHomestay.name}</h2>
+					<p>{featuredHomestay.about}</p>
+					<div class="stats">
+						{
+							featuredHomestay.stats.map((stat) => (
+								<div>
+									<strong>{stat.value}</strong>
+									<span>{stat.label}</span>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="rooms" class="section section-muted">
+			<div class="section-inner">
+				<div class="section-heading">
+					<p class="eyebrow">Rooms</p>
+					<h2>客房介紹</h2>
+				</div>
+				<div class="room-grid">
+					{
+						rooms.map((room) => (
+							<article class="room-card" data-room-card>
+								<div class="room-image-slider">
+									{room.images.map((image, imageIndex) => (
+										<img
+											src={image}
+											alt={`${room.name}空間照片 ${imageIndex + 1}`}
+											loading="lazy"
+											class:list={{ active: imageIndex === 0 }}
+										/>
+									))}
+									<div class="room-image-controls">
+										<button type="button" data-room-image-prev aria-label="上一張房型照片">
+											‹
+										</button>
+										<button type="button" data-room-image-next aria-label="下一張房型照片">
+											›
+										</button>
+									</div>
+									<div class="room-image-dots" aria-label={`${room.name}照片狀態`}>
+										{
+											room.images.map((_, imageIndex) => (
+												<button
+													type="button"
+													class:list={{ active: imageIndex === 0 }}
+													data-room-image-dot={imageIndex}
+													aria-label={`切換到第 ${imageIndex + 1} 張房型照片`}
+												/>
+											))
+										}
+									</div>
+								</div>
+								<div>
+									<h3>{room.name}</h3>
+									<p>{room.price}</p>
+									<p class="room-description">{room.description}</p>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section id="booking" class="section">
+			<div class="booking-panel">
+				<div>
+					<p class="eyebrow">Booking</p>
+					<h2>訂房資訊</h2>
+					<div class="booking-list">
+						{
+							bookingRows.map((row) => (
+								<div>
+									<span>{row.label}</span>
+									<strong>{row.value}</strong>
+								</div>
+							))
+						}
+					</div>
+				</div>
+				<div class="booking-notices-wrap" data-booking-notices>
+					<ul class="booking-notices">
+						{
+							bookingNotices.map((notice, index) => (
+								<li
+									class={index >= 4 ? "is-collapsed" : ""}
+									data-booking-notice-extra={index >= 4 ? "true" : undefined}
+								>
+									{notice}
+								</li>
+							))
+						}
+					</ul>
+					{
+						bookingNotices.length > 4 && (
+							<button
+								class="booking-toggle"
+								type="button"
+								data-booking-toggle
+								aria-expanded="false"
+								data-expand-label="查看更多"
+								data-collapse-label="收合"
+							>
+								<span>查看更多</span>
+							</button>
+						)
+					}
+				</div>
+			</div>
+		</section>
+
+		<section id="location" class="section section-location">
+			<div class="location-content">
+				<div>
+					<p class="eyebrow">Location</p>
+					<h2>民宿位置</h2>
+					<p>{featuredHomestay.location.description}</p>
+					<p>{featuredHomestay.location.transport}</p>
+				</div>
+				<div
+					class="map-card"
+					aria-label="民宿位置示意地圖"
+					style={`background-image: linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)), url('${featuredHomestay.location.mapImage}')`}
+				>
+					<span>{featuredHomestay.location.label}</span>
+					<strong>{featuredHomestay.location.mapTitle}</strong>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<span>© 2026 {featuredHomestay.name}</span>
+		<span>{featuredHomestay.address}</span>
+	</footer>
+</Layout>
+
+<script>
+	const slider = document.querySelector("[data-slider]");
+
+	const navToggle = document.querySelector(".nav-toggle");
+	const mainNav = document.querySelector("#main-nav");
+
+	navToggle?.addEventListener("click", () => {
+		const isOpen = navToggle.getAttribute("aria-expanded") === "true";
+		navToggle.setAttribute("aria-expanded", String(!isOpen));
+		mainNav?.classList.toggle("open", !isOpen);
+	});
+
+	mainNav?.querySelectorAll("a").forEach((link) => {
+		link.addEventListener("click", () => {
+			navToggle?.setAttribute("aria-expanded", "false");
+			mainNav.classList.remove("open");
+		});
+	});
+
+	const sidebox = document.querySelector("[data-sidebox]");
+	const sideboxToggle = sidebox?.querySelector("[data-sidebox-toggle]");
+	const sideboxClose = sidebox?.querySelector("[data-sidebox-close]");
+	const touchSideboxQuery = window.matchMedia("(hover: none), (pointer: coarse)");
+
+	const setSideboxOpen = (isOpen) => {
+		sidebox?.classList.toggle("is-open", isOpen);
+		sideboxToggle?.setAttribute("aria-expanded", String(isOpen));
+	};
+
+	sideboxToggle?.addEventListener("click", (event) => {
+		if (!touchSideboxQuery.matches) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		setSideboxOpen(!sidebox?.classList.contains("is-open"));
+	});
+
+	sideboxClose?.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		setSideboxOpen(false);
+		sideboxToggle?.focus();
+	});
+
+	document.addEventListener("click", (event) => {
+		if (!touchSideboxQuery.matches || !sidebox?.classList.contains("is-open")) {
+			return;
+		}
+
+		if (event.target instanceof Node && sidebox.contains(event.target)) {
+			return;
+		}
+
+		setSideboxOpen(false);
+	});
+
+	sidebox?.querySelectorAll('a[href="#"]').forEach((link) => {
+		link.addEventListener("click", (event) => {
+			event.preventDefault();
+			setSideboxOpen(false);
+		});
+	});
+
+	sidebox?.querySelectorAll('a:not([href="#"])').forEach((link) => {
+		link.addEventListener("click", () => {
+			setSideboxOpen(false);
+		});
+	});
+
+	touchSideboxQuery.addEventListener("change", () => {
+		setSideboxOpen(false);
+	});
+
+	if (slider) {
+		const slides = Array.from(slider.querySelectorAll(".hero-slide"));
+		const dots = Array.from(slider.querySelectorAll("[data-dot]"));
+		const prev = slider.querySelector("[data-prev]");
+		const next = slider.querySelector("[data-next]");
+		let current = 0;
+		let timer;
+
+		const showSlide = (target) => {
+			current = (target + slides.length) % slides.length;
+			slides.forEach((slide, index) => slide.classList.toggle("active", index === current));
+			dots.forEach((dot, index) => dot.classList.toggle("active", index === current));
+		};
+
+		const start = () => {
+			timer = window.setInterval(() => showSlide(current + 1), 5200);
+		};
+
+		const restart = () => {
+			window.clearInterval(timer);
+			start();
+		};
+
+		prev?.addEventListener("click", () => {
+			showSlide(current - 1);
+			restart();
+		});
+
+		next?.addEventListener("click", () => {
+			showSlide(current + 1);
+			restart();
+		});
+
+		dots.forEach((dot, index) => {
+			dot.addEventListener("click", () => {
+				showSlide(index);
+				restart();
+			});
+		});
+
+		start();
+	}
+
+	document.querySelectorAll("[data-room-card]").forEach((card) => {
+		const images = Array.from(card.querySelectorAll(".room-image-slider img"));
+		const prev = card.querySelector("[data-room-image-prev]");
+		const next = card.querySelector("[data-room-image-next]");
+		const dots = Array.from(card.querySelectorAll("[data-room-image-dot]"));
+		let current = 0;
+
+		const showImage = (target) => {
+			current = (target + images.length) % images.length;
+			images.forEach((image, index) => image.classList.toggle("active", index === current));
+			dots.forEach((dot, index) => dot.classList.toggle("active", index === current));
+		};
+
+		prev?.addEventListener("click", () => showImage(current - 1));
+		next?.addEventListener("click", () => showImage(current + 1));
+		dots.forEach((dot, index) => {
+			dot.addEventListener("click", () => showImage(index));
+		});
+	});
+
+	document.querySelectorAll("[data-booking-notices]").forEach((group) => {
+		const toggle = group.querySelector("[data-booking-toggle]");
+		const extraItems = Array.from(group.querySelectorAll("[data-booking-notice-extra]"));
+
+		if (!toggle || extraItems.length === 0) {
+			return;
+		}
+
+		const expandLabel = toggle.getAttribute("data-expand-label") ?? "展開更多規則";
+		const collapseLabel = toggle.getAttribute("data-collapse-label") ?? "收合規則";
+
+		toggle.addEventListener("click", () => {
+			const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+			const nextExpanded = !isExpanded;
+			const label = toggle.querySelector("span");
+
+			extraItems.forEach((item) => {
+				item.classList.toggle("is-collapsed", !nextExpanded);
+			});
+			toggle.setAttribute("aria-expanded", String(nextExpanded));
+			if (label) {
+				label.textContent = nextExpanded ? collapseLabel : expandLabel;
+			}
+		});
+	});
+</script>
+
+<style>
+	:global(html) {
+		scroll-behavior: smooth;
+		scroll-padding-top: 86px;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.site-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 18px clamp(20px, 5vw, 72px);
+		box-sizing: border-box;
+		background: rgba(251, 250, 247, 0.92);
+		border-bottom: 1px solid rgba(35, 46, 44, 0.1);
+		backdrop-filter: blur(18px);
+	}
+
+	.brand,
+	.main-nav {
+		display: flex;
+		align-items: center;
+	}
+
+	.brand {
+		flex: 0 0 auto;
+		gap: 10px;
+		font-weight: 800;
+		color: #193b37;
+	}
+
+	.brand-mark {
+		display: grid;
+		width: 42px;
+		height: 42px;
+		place-items: center;
+		overflow: hidden;
+		border-radius: 50%;
+		background: #d86f45;
+		color: #fff;
+	}
+
+	.brand-mark-logo {
+		padding: 4px;
+		border: 1px solid rgba(24, 59, 55, 0.14);
+		border-radius: 8px;
+		background: #fff;
+	}
+
+	.brand-mark img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.main-nav {
+		flex: 1 1 auto;
+		min-width: 0;
+		justify-content: flex-end;
+		flex-wrap: wrap;
+		gap: 10px clamp(12px, 2vw, 28px);
+		font-size: 15px;
+		font-weight: 700;
+		color: #2c4843;
+	}
+
+	.main-nav a {
+		padding: 8px 0;
+		border-bottom: 2px solid transparent;
+	}
+
+	.main-nav a:hover {
+		border-color: #d86f45;
+	}
+
+	.nav-toggle {
+		display: none;
+		position: relative;
+		width: 42px;
+		height: 42px;
+		place-items: center;
+		border: 1px solid rgba(24, 59, 55, 0.12);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.78);
+		box-shadow: 0 10px 26px rgba(22, 35, 33, 0.1);
+		backdrop-filter: blur(12px);
+		cursor: pointer;
+		transition:
+			background 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.nav-toggle span {
+		position: absolute;
+		left: 50%;
+		display: block;
+		width: 19px;
+		height: 2px;
+		border-radius: 999px;
+		background: #183b37;
+		transform: translateX(-50%);
+		transition:
+			top 180ms ease,
+			transform 180ms ease,
+			opacity 180ms ease;
+	}
+
+	.nav-toggle span:nth-child(1) {
+		top: 14px;
+	}
+
+	.nav-toggle span:nth-child(2) {
+		top: 20px;
+		width: 14px;
+	}
+
+	.nav-toggle span:nth-child(3) {
+		top: 26px;
+	}
+
+	.nav-toggle:hover,
+	.nav-toggle[aria-expanded="true"] {
+		background: rgba(255, 255, 255, 0.94);
+		border-color: rgba(24, 59, 55, 0.24);
+		box-shadow: 0 14px 32px rgba(22, 35, 33, 0.14);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+		top: 20px;
+		transform: translateX(-50%) rotate(45deg);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+		opacity: 0;
+		transform: translateX(-50%) scaleX(0);
+	}
+
+	.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+		top: 20px;
+		transform: translateX(-50%) rotate(-45deg);
+	}
+
+	.hero {
+		height: 100vh;
+		min-height: 720px;
+		background: #193b37;
+		overflow: hidden;
+	}
+
+	.hero-slider {
+		position: relative;
+		height: 100%;
+		min-height: inherit;
+	}
+
+	.hero-slide {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		padding: 120px clamp(24px, 7vw, 110px) 86px;
+		background-position: center;
+		background-size: cover;
+		opacity: 0;
+		transition: opacity 700ms ease;
+	}
+
+	.hero-slide.active {
+		opacity: 1;
+	}
+
+	.hero-content {
+		max-width: 720px;
+		color: #fff;
+	}
+
+	.eyebrow {
+		margin: 0 0 12px;
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	.hero-content .eyebrow {
+		color: #f5c16b;
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin-top: 0;
+	}
+
+	h1 {
+		max-width: 780px;
+		margin-bottom: 22px;
+		font-size: clamp(48px, 6vw, 88px);
+		line-height: 1.06;
+		letter-spacing: 0;
+	}
+
+	h2 {
+		margin-bottom: 18px;
+		color: #183b37;
+		font-size: clamp(32px, 4vw, 52px);
+		line-height: 1.12;
+		letter-spacing: 0;
+	}
+
+	h3 {
+		color: #183b37;
+		font-size: 22px;
+	}
+
+	.hero-content p:not(.eyebrow) {
+		max-width: 580px;
+		margin-bottom: 30px;
+		font-size: 20px;
+		line-height: 1.8;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.hero-action,
+	.sidebox-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 46px;
+		padding: 0 22px;
+		border-radius: 4px;
+		background: #d86f45;
+		color: #fff;
+		font-weight: 800;
+	}
+
+	.slider-controls {
+		position: absolute;
+		right: clamp(24px, 7vw, 110px);
+		bottom: 34px;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 18px;
+	}
+
+	.slider-controls button {
+		cursor: pointer;
+	}
+
+	.slider-controls > button {
+		width: 42px;
+		height: 42px;
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.15);
+		color: #fff;
+		font-size: 28px;
+		line-height: 1;
+	}
+
+	.slider-dots {
+		display: flex;
+		gap: 8px;
+	}
+
+	.slider-dots button {
+		width: 32px;
+		height: 4px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.45);
+	}
+
+	.slider-dots button.active {
+		background: #fff;
+	}
+
+	.sidebox {
+		position: fixed;
+		right: 24px;
+		top: 75%;
+		z-index: 15;
+		width: 92px;
+		min-height: 48px;
+		transform: translateY(-50%);
+		transition:
+			width 240ms ease,
+			filter 240ms ease;
+	}
+
+	.sidebox:hover,
+	.sidebox:focus-within,
+	.sidebox.is-open {
+		width: 176px;
+		filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
+	}
+
+	.sidebox-toggle {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		z-index: 2;
+		display: grid;
+		width: 92px;
+		height: 48px;
+		place-items: center;
+		border: 0;
+		border-radius: 6px;
+		background: rgba(248, 137, 82, 0.64);
+		color: #fff;
+		cursor: pointer;
+		box-shadow: 0 12px 30px rgba(22, 35, 33, 0.18);
+		backdrop-filter: blur(10px);
+	}
+
+	.sidebox-toggle span {
+		display: block;
+		border: 0;
+		font-weight: 900;
+		font-size: 14px;
+		letter-spacing: 0;
+	}
+
+	.sidebox-panel {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		display: grid;
+		width: 176px;
+		box-sizing: border-box;
+		gap: 12px;
+		padding: 16px;
+		border: 1px solid rgba(24, 59, 55, 0.14);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.96);
+		box-shadow: 0 18px 50px rgba(22, 35, 33, 0.18);
+		opacity: 0;
+		pointer-events: none;
+		transform: translate(18px, 18px) scale(0.96);
+		transform-origin: right bottom;
+		transition:
+			opacity 220ms ease,
+			transform 240ms ease;
+	}
+
+	.sidebox:hover .sidebox-panel,
+	.sidebox:focus-within .sidebox-panel,
+	.sidebox.is-open .sidebox-panel {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(0, 0) scale(1);
+	}
+
+	.sidebox:hover .sidebox-toggle,
+	.sidebox:focus-within .sidebox-toggle,
+	.sidebox.is-open .sidebox-toggle {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.sidebox-close {
+		display: none;
+	}
+
+	@media (hover: none), (pointer: coarse) {
+		.sidebox:hover,
+		.sidebox:focus-within {
+			width: 92px;
+			filter: none;
+		}
+
+		.sidebox.is-open {
+			width: min(176px, calc(100vw - 32px));
+			filter: drop-shadow(0 18px 42px rgba(22, 35, 33, 0.2));
+		}
+
+		.sidebox:hover .sidebox-panel,
+		.sidebox:focus-within .sidebox-panel {
+			opacity: 0;
+			pointer-events: none;
+			transform: translate(18px, 18px) scale(0.96);
+		}
+
+		.sidebox.is-open .sidebox-panel {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translate(0, 0) scale(1);
+		}
+
+		.sidebox:hover .sidebox-toggle,
+		.sidebox:focus-within .sidebox-toggle {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.sidebox.is-open .sidebox-toggle {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.sidebox-close {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			z-index: 2;
+			display: grid;
+			width: 32px;
+			height: 32px;
+			place-items: center;
+			border: 0;
+			border-radius: 6px;
+			background: transparent;
+			color: #183b37;
+			cursor: pointer;
+		}
+
+		.sidebox-close span {
+			position: absolute;
+			width: 16px;
+			height: 2px;
+			border-radius: 999px;
+			background: currentColor;
+		}
+
+		.sidebox-close span:first-child {
+			transform: rotate(45deg);
+		}
+
+		.sidebox-close span:last-child {
+			transform: rotate(-45deg);
+		}
+	}
+
+	.sidebox-section {
+		padding-bottom: 12px;
+		border-bottom: 1px solid rgba(24, 59, 55, 0.12);
+	}
+
+	.sidebox-section:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.sidebox-section p {
+		margin: 0;
+		color: #60706c;
+		font-size: 12px;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	.sidebox-reserve {
+		padding-top: 0;
+	}
+
+	.sidebox-reserve p {
+		margin-bottom: 10px;
+		color: #183b37;
+		font-size: 14px;
+		text-transform: none;
+	}
+
+	.sidebox-reserve .sidebox-button {
+		width: 100%;
+		min-width: 0;
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+
+	.sidebox-icons {
+		display: flex;
+		justify-content: space-between;
+		gap: 7px;
+		margin-top: 0;
+	}
+
+	.sidebox-icons a {
+		display: grid;
+		width: 42px;
+		height: 42px;
+		place-items: center;
+		border: 1px solid rgba(24, 59, 55, 0.16);
+		border-radius: 6px;
+		background: #f7f4ef;
+		color: #183b37;
+		font-weight: 900;
+		font-size: 13px;
+		transition:
+			background 180ms ease,
+			color 180ms ease,
+			transform 180ms ease;
+	}
+
+	.sidebox-icons a:hover {
+		background: #fff;
+		border-color: rgba(216, 111, 69, 0.42);
+		transform: translateY(-2px);
+	}
+
+	.sidebox-icons img {
+		display: block;
+		width: 24px;
+		height: 24px;
+		object-fit: contain;
+		filter: grayscale(1) saturate(0) contrast(0.88);
+		opacity: 0.72;
+		transition:
+			filter 180ms ease,
+			opacity 180ms ease;
+	}
+
+	.sidebox-icons a:hover img {
+		filter: grayscale(0.35) saturate(0.65);
+		opacity: 0.95;
+	}
+
+	.section {
+		padding: 96px clamp(24px, 7vw, 110px);
+	}
+
+	.section-muted {
+		background: #f2eee7;
+	}
+
+	.section-inner {
+		max-width: 1160px;
+		margin: 0 auto;
+	}
+
+	.section-heading {
+		max-width: 680px;
+		margin-bottom: 34px;
+	}
+
+	.section-heading p:not(.eyebrow) {
+		color: #5d6d69;
+		line-height: 1.8;
+	}
+
+	.region-list {
+		display: grid;
+		gap: 42px;
+	}
+
+	.region-block {
+		display: grid;
+		gap: 18px;
+	}
+
+	.region-heading {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 24px;
+		border-bottom: 1px solid rgba(24, 59, 55, 0.12);
+		padding-bottom: 14px;
+	}
+
+	.region-heading h3,
+	.region-heading p {
+		margin-bottom: 0;
+	}
+
+	.region-heading p {
+		max-width: 520px;
+		color: #5d6d69;
+		line-height: 1.7;
+	}
+
+	.partner-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 22px;
+	}
+
+	.partner-card {
+		overflow: hidden;
+		border: 1px solid rgba(24, 59, 55, 0.1);
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+	}
+
+	.partner-card img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.partner-card-body {
+		display: grid;
+		gap: 14px;
+		padding: 22px;
+	}
+
+	.partner-card h4 {
+		margin: 0;
+		color: #183b37;
+		font-size: 22px;
+		line-height: 1.3;
+	}
+
+	.partner-card p {
+		margin-bottom: 0;
+		color: #5d6d69;
+		line-height: 1.75;
+	}
+
+	.partner-meta,
+	.partner-card-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+	}
+
+	.partner-meta {
+		color: #d86f45;
+		font-size: 13px;
+		font-weight: 900;
+	}
+
+	.partner-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.partner-tags span {
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: #f2eee7;
+		color: #41534f;
+		font-size: 13px;
+		font-weight: 800;
+	}
+
+	.partner-card-footer {
+		padding-top: 6px;
+		color: #60706c;
+	}
+
+	.partner-card-footer strong {
+		color: #183b37;
+	}
+
+	.news-grid,
+	.room-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 22px;
+	}
+
+	.news-grid article,
+	.room-card,
+	.booking-panel {
+		border: 1px solid rgba(24, 59, 55, 0.1);
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+	}
+
+	.news-grid article {
+		overflow: hidden;
+	}
+
+	.news-grid img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+	}
+
+	.news-grid article div {
+		padding: 24px 26px 28px;
+	}
+
+	time {
+		display: inline-block;
+		margin-bottom: 18px;
+		color: #d86f45;
+		font-size: 14px;
+		font-weight: 900;
+	}
+
+	.news-grid p,
+	.section-copy p,
+	.booking-panel p,
+	.location-content p,
+	.room-card p {
+		color: #5d6d69;
+		line-height: 1.8;
+	}
+
+	.split-layout,
+	.location-content,
+	.booking-panel {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+		gap: clamp(32px, 6vw, 76px);
+		max-width: 1160px;
+		margin: 0 auto;
+		align-items: center;
+	}
+
+	.about-photo {
+		min-height: 520px;
+		border-radius: 8px;
+		background:
+			linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)),
+			url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=80")
+				center / cover;
+	}
+
+	.section-copy {
+		max-width: 530px;
+	}
+
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 14px;
+		margin-top: 32px;
+	}
+
+	.stats div {
+		padding: 18px;
+		border-left: 4px solid #d86f45;
+		background: #f5f1ea;
+	}
+
+	.stats strong,
+	.stats span {
+		display: block;
+	}
+
+	.stats strong {
+		color: #183b37;
+		font-size: 28px;
+	}
+
+	.stats span {
+		margin-top: 4px;
+		color: #60706c;
+		font-size: 14px;
+	}
+
+	.room-card {
+		overflow: hidden;
+		transition: box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.room-card:hover {
+		box-shadow: 0 24px 56px rgba(35, 46, 44, 0.16);
+	}
+
+	.room-image-slider {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: #183b37;
+	}
+
+	.room-image-slider img {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition:
+			opacity 300ms ease,
+			transform 400ms ease;
+	}
+
+	.room-image-slider img.active {
+		opacity: 1;
+	}
+
+	.room-card:hover .room-image-slider img.active {
+		transform: scale(1.1);
+	}
+
+	.room-image-controls {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 12px;
+		pointer-events: none;
+	}
+
+	.room-image-controls button {
+		display: grid;
+		width: 34px;
+		height: 48px;
+		place-items: center;
+		border: 0;
+		background: transparent;
+		color: #fff;
+		cursor: pointer;
+		font-size: 38px;
+		line-height: 1;
+		opacity: 0.72;
+		pointer-events: auto;
+		text-shadow: 0 2px 12px rgba(13, 31, 35, 0.72);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease;
+	}
+
+	.room-image-controls button:hover {
+		opacity: 1;
+		transform: scale(1.12);
+	}
+
+	.room-card .room-image-dots {
+		position: absolute;
+		left: 50%;
+		bottom: 13px;
+		z-index: 3;
+		display: flex;
+		gap: 7px;
+		transform: translateX(-50%);
+		padding: 5px;
+	}
+
+	.room-image-dots button {
+		width: 7px;
+		height: 7px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.52);
+		cursor: pointer;
+	}
+
+	.room-image-dots button.active {
+		background: #fff;
+	}
+
+	.room-card div {
+		padding: 24px;
+	}
+
+	.room-description {
+		margin-bottom: 0;
+	}
+
+	.booking-panel {
+		padding: clamp(28px, 5vw, 56px);
+		background:
+			linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+			url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80")
+				center / cover;
+	}
+
+	.booking-notices {
+		display: grid;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.booking-notices-wrap {
+		display: grid;
+		gap: 18px;
+		align-content: start;
+	}
+
+	.booking-notices li {
+		position: relative;
+		padding: 0 0 0 18px;
+		color: #41534f;
+		font-size: 14px;
+		line-height: 1.7;
+	}
+
+	.booking-notices li.is-collapsed {
+		display: none;
+	}
+
+	.booking-notices li::before {
+		position: absolute;
+		top: 0.72em;
+		left: 0;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #d86f45;
+		content: "";
+		transform: translateY(-50%);
+	}
+
+	.booking-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-self: end;
+		gap: 6px;
+		border: 0;
+		padding: 0;
+		background: transparent;
+		color: #d86f45;
+		font: inherit;
+		font-size: 14px;
+		font-weight: 900;
+		cursor: pointer;
+		transition: color 0.2s ease;
+	}
+
+	.booking-toggle:hover,
+	.booking-toggle:focus-visible {
+		color: #183b37;
+		outline: none;
+	}
+
+	.booking-toggle::after {
+		content: "↓";
+		font-size: 13px;
+		line-height: 1;
+		transition: transform 0.2s ease;
+	}
+
+	.booking-toggle[aria-expanded="true"]::after {
+		transform: rotate(180deg);
+	}
+
+	.booking-list {
+		display: grid;
+		gap: 12px;
+	}
+
+	.booking-list div {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 16px 0;
+		border-bottom: 1px solid rgba(24, 59, 55, 0.14);
+	}
+
+	.booking-list span {
+		color: #d86f45;
+		font-weight: 900;
+	}
+
+	.booking-list strong {
+		color: #183b37;
+		text-align: right;
+	}
+
+	.section-location {
+		background: #183b37;
+	}
+
+	.section-location h2,
+	.section-location p {
+		color: #fff;
+	}
+
+	.section-location p {
+		color: rgba(255, 255, 255, 0.78);
+	}
+
+	.map-card {
+		display: grid;
+		min-height: 360px;
+		place-items: center;
+		padding: 34px;
+		border-radius: 8px;
+		background:
+			linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)),
+			url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80")
+				center / cover;
+		color: #fff;
+		text-align: center;
+	}
+
+	.map-card span,
+	.map-card strong {
+		display: block;
+		padding: 8px 14px;
+		background: rgba(24, 59, 55, 0.78);
+	}
+
+	.map-card strong {
+		margin-top: 8px;
+		font-size: 26px;
+	}
+
+	.site-footer {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 28px clamp(24px, 7vw, 110px);
+		background: #102522;
+		color: rgba(255, 255, 255, 0.76);
+	}
+
+	@media (max-width: 980px) {
+		.site-header {
+			position: sticky;
+			flex-direction: column;
+			gap: 14px;
+			padding: 14px 18px;
+		}
+
+		.main-nav {
+			width: 100%;
+			justify-content: center;
+			gap: 10px 18px;
+			overflow: visible;
+			padding-bottom: 0;
+			white-space: normal;
+		}
+
+		.hero,
+		.hero-slider {
+			min-height: 760px;
+		}
+
+		.hero-slide {
+			padding: 110px 24px 110px;
+		}
+
+		.sidebox {
+			top: auto;
+			right: 16px;
+			bottom: 16px;
+			left: auto;
+			width: 92px;
+			min-height: 48px;
+			transform: none;
+		}
+
+		.sidebox-panel {
+			width: min(176px, calc(100vw - 32px));
+		}
+
+		.split-layout,
+		.location-content,
+		.booking-panel {
+			grid-template-columns: 1fr;
+		}
+
+		.region-heading {
+			display: grid;
+			align-items: start;
+			gap: 8px;
+		}
+
+		.partner-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.news-grid,
+		.room-grid {
+			display: flex;
+			gap: 18px;
+			overflow-x: auto;
+			padding: 4px 2px 24px;
+			scroll-snap-type: x proximity;
+			scrollbar-width: none;
+		}
+
+		.news-grid::-webkit-scrollbar,
+		.room-grid::-webkit-scrollbar {
+			display: none;
+		}
+
+		.news-grid article,
+		.room-grid .room-card {
+			flex: 0 0 min(82vw, 460px);
+			scroll-snap-align: start;
+		}
+
+		.room-card:hover {
+			box-shadow: 0 16px 40px rgba(35, 46, 44, 0.08);
+		}
+
+		.about-photo {
+			min-height: 360px;
+		}
+
+		.site-footer {
+			flex-direction: column;
+			padding-bottom: 112px;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.site-header {
+			position: fixed;
+			flex-direction: row;
+			gap: 12px;
+		}
+
+		.nav-toggle {
+			display: grid;
+		}
+
+		.main-nav {
+			position: absolute;
+			top: calc(100% + 8px);
+			right: 16px;
+			display: grid;
+			width: min(220px, calc(100vw - 32px));
+			gap: 0;
+			padding: 8px;
+			border: 1px solid rgba(24, 59, 55, 0.12);
+			border-radius: 8px;
+			background: rgba(255, 255, 255, 0.96);
+			box-shadow: 0 18px 42px rgba(22, 35, 33, 0.16);
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(-8px);
+			transition:
+				opacity 180ms ease,
+				transform 180ms ease;
+		}
+
+		.main-nav.open {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translateY(0);
+		}
+
+		.main-nav a {
+			padding: 12px 14px;
+			border-bottom: 0;
+			border-radius: 6px;
+		}
+
+		.main-nav a:hover {
+			background: #f2eee7;
+			border-color: transparent;
+		}
+
+		h1 {
+			font-size: 42px;
+		}
+
+		h2 {
+			font-size: 34px;
+		}
+
+		.hero-content p:not(.eyebrow) {
+			font-size: 17px;
+		}
+
+		.slider-controls {
+			right: auto;
+			left: 50%;
+			justify-content: center;
+			gap: 14px;
+			transform: translateX(-50%);
+		}
+
+		.section {
+			padding: 72px 20px;
+		}
+
+		.news-grid,
+		.room-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			overflow: visible;
+			padding: 0;
+		}
+
+		.news-grid article,
+		.room-grid .room-card {
+			flex: none;
+		}
+
+		.stats {
+			grid-template-columns: 1fr;
+		}
+
+		.booking-list div {
+			display: grid;
+			gap: 6px;
+		}
+
+		.booking-list strong {
+			text-align: left;
+		}
+	}
+</style>
