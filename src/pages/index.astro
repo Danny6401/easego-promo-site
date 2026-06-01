@@ -1382,6 +1382,23 @@ const cases = [
     text-align: center;
   }
 
+  @media (max-width: 1500px) {
+    .badge-photo {
+      display: none;
+    }
+
+    .badge-count {
+      margin-left: 0;
+    }
+
+    .region-badge.north .badge-count,
+    .region-badge.east .badge-count,
+    .region-badge.islands .badge-count {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
   @media (max-width: 1080px) {
     .hero {
       grid-template-columns: 1fr;

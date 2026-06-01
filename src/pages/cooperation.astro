@@ -6,6 +6,7 @@ const baseUrl = import.meta.env.BASE_URL.endsWith("/")
 	? import.meta.env.BASE_URL
 	: `${import.meta.env.BASE_URL}/`;
 const regions = cooperationData.regions;
+const logoUrl = `${baseUrl}easegoLogo.png`;
 const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
 const regionUrl = (id) => `${baseUrl}cooperation/region/${id}/`;
 const allHomestays = regions.flatMap((region) => region.homestays);
@@ -17,7 +18,7 @@ const allHomestays = regions.flatMap((region) => region.homestays);
 >
 	<header class="site-header">
 		<a class="brand" href={baseUrl} aria-label="回到首頁">
-			<span class="brand-mark">H&amp;</span>
+			<img class="brand-logo" src={logoUrl} alt="Easego" />
 			<span>Easego 合作旅宿</span>
 		</a>
 		<nav class="main-nav" aria-label="區域導覽">
@@ -136,14 +137,11 @@ const allHomestays = regions.flatMap((region) => region.homestays);
 		text-decoration: none;
 	}
 
-	.brand-mark {
-		display: grid;
+	.brand-logo {
 		width: 40px;
 		height: 40px;
-		place-items: center;
 		border-radius: 8px;
-		background: #0f5e58;
-		color: #fff;
+		object-fit: contain;
 	}
 
 	.main-nav {

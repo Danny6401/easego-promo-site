@@ -43,6 +43,10 @@ const news = featuredHomestay.news;
 const bookingRows = featuredHomestay.bookingRows;
 const bookingNotices = featuredHomestay.bookingNotices;
 const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
+const addressMapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
+	featuredHomestay.address,
+)}&output=embed`;
+const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 ---
 
 <Layout
@@ -74,7 +78,7 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 	</header>
 
 	<main id="top">
-		<section class="hero" aria-label="民宿形象輪播">
+		<section class="hero" aria-label="homestay hero slider">
 			<div class="hero-slider" data-slider>
 				{
 					slides.map((slide, index) => (
@@ -91,37 +95,28 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 						</article>
 					))
 				}
-				<div class="slider-controls" aria-label="輪播控制">
-					<button type="button" data-prev aria-label="上一張">‹</button>
+				<div class="slider-controls" aria-label="slider controls">
+					<button type="button" data-prev aria-label="previous slide">&lt;</button>
 					<div class="slider-dots">
-						{
-							slides.map((_, index) => (
-								<button
-									type="button"
-									class:list={{ active: index === 0 }}
-									data-dot={index}
-									aria-label={`切換到第 ${index + 1} 張`}
-								/>
-							))
-						}
+						{slides.map((_, index) => <button type="button" class:list={{ active: index === 0 }} data-dot={index}></button>)}
 					</div>
-					<button type="button" data-next aria-label="下一張">›</button>
+					<button type="button" data-next aria-label="next slide">&gt;</button>
 				</div>
 			</div>
 		</section>
 
-		<aside class="sidebox" data-sidebox aria-label="快速訂房資訊">
+		<aside class="sidebox" data-sidebox aria-label="booking and social links">
 			<button
 				class="sidebox-toggle"
 				type="button"
-				aria-label="開啟快速訂房"
+				aria-label="toggle booking panel"
 				aria-expanded="false"
 				data-sidebox-toggle
 			>
 				<span>快速訂房</span>
 			</button>
 			<div class="sidebox-panel">
-				<button class="sidebox-close" type="button" aria-label="關閉快速訂房" data-sidebox-close>
+				<button class="sidebox-close" type="button" aria-label="close booking panel" data-sidebox-close>
 					<span></span>
 					<span></span>
 				</button>
@@ -145,7 +140,7 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 								loading="lazy"
 							/>
 						</a>
-						<a href={featuredHomestay.links.eztravel} aria-label="易遊網">
+						<a href={featuredHomestay.links.eztravel} aria-label="ezTravel">
 							<img
 								src="https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw"
 								alt=""
@@ -155,7 +150,7 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 					</div>
 				</div>
 				<div class="sidebox-section">
-					<div class="sidebox-icons" aria-label="社群連結">
+					<div class="sidebox-icons" aria-label="social links">
 						<a href={featuredHomestay.links.facebook} aria-label="Facebook">
 							<img
 								src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com"
@@ -250,21 +245,21 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 										/>
 									))}
 									<div class="room-image-controls">
-										<button type="button" data-room-image-prev aria-label="上一張房型照片">
-											‹
+										<button type="button" data-room-image-prev aria-label="previous room image">
+										&lt;
 										</button>
-										<button type="button" data-room-image-next aria-label="下一張房型照片">
-											›
+										<button type="button" data-room-image-next aria-label="next room image">
+										&gt;
 										</button>
 									</div>
-									<div class="room-image-dots" aria-label={`${room.name}照片狀態`}>
+									<div class="room-image-dots" aria-label={`${room.name} images`}>
 										{
 											room.images.map((_, imageIndex) => (
 												<button
 													type="button"
 													class:list={{ active: imageIndex === 0 }}
 													data-room-image-dot={imageIndex}
-													aria-label={`切換到第 ${imageIndex + 1} 張房型照片`}
+											aria-label={"room image " + (imageIndex + 1)}
 												/>
 											))
 										}
@@ -337,14 +332,14 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 					<p>{featuredHomestay.location.description}</p>
 					<p>{featuredHomestay.location.transport}</p>
 				</div>
-				<div
-					class="map-card"
-					aria-label="民宿位置示意地圖"
-					style={`background-image: linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)), url('${featuredHomestay.location.mapImage}')`}
-				>
-					<span>{featuredHomestay.location.label}</span>
-					<strong>{featuredHomestay.location.mapTitle}</strong>
-				</div>
+				<iframe
+					class="google-map"
+					src={mapEmbedUrl}
+					title={`${featuredHomestay.name} Google Map`}
+					loading="lazy"
+					allowfullscreen
+					referrerpolicy="no-referrer-when-downgrade"
+				></iframe>
 			</div>
 		</section>
 	</main>
@@ -1506,6 +1501,13 @@ const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 
 	.section-location p {
 		color: rgba(255, 255, 255, 0.78);
+	}
+
+	.google-map {
+		width: 100%;
+		min-height: 360px;
+		border: 0;
+		border-radius: 8px;
 	}
 
 	.map-card {

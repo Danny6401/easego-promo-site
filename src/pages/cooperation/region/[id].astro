@@ -13,6 +13,7 @@ export function getStaticPaths() {
 const baseUrl = import.meta.env.BASE_URL.endsWith("/")
 	? import.meta.env.BASE_URL
 	: `${import.meta.env.BASE_URL}/`;
+const logoUrl = `${baseUrl}easegoLogo.png`;
 const listUrl = `${baseUrl}cooperation/`;
 const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
 const currentRegion = regions.find((region) => region.id === Astro.params.id) ?? regions[0];
@@ -24,7 +25,7 @@ const currentRegion = regions.find((region) => region.id === Astro.params.id) ??
 >
 	<header class="site-header">
 		<a class="brand" href={baseUrl} aria-label="回到首頁">
-			<span class="brand-mark">H&amp;</span>
+			<img class="brand-logo" src={logoUrl} alt="Easego" />
 			<span>Easego 合作旅宿</span>
 		</a>
 		<nav class="main-nav" aria-label="主要導覽">
@@ -130,14 +131,11 @@ const currentRegion = regions.find((region) => region.id === Astro.params.id) ??
 		text-decoration: none;
 	}
 
-	.brand-mark {
-		display: grid;
+	.brand-logo {
 		width: 40px;
 		height: 40px;
-		place-items: center;
 		border-radius: 8px;
-		background: #0f5e58;
-		color: #fff;
+		object-fit: contain;
 	}
 
 	.main-nav {

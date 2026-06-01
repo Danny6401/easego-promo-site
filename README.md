@@ -82,6 +82,7 @@ All commands are run from the root of the project, from a terminal:
 | `region` | yes | 區域文字：北部 / 中部 / 南部 / 東部 / 離島 / 國外 |
 | `area` | yes | 顯示用地點，例如 `台東成功` |
 | `address` | yes | 完整地址 |
+| `googleMapEmbedUrl` | no | Google Maps iframe embed URL. 從 Google Maps「分享」→「嵌入地圖」複製 iframe 後，填入 `src` 的 URL；留空時介紹頁會用 `address` 連到 Google Maps 搜尋。 |
 | `summary` | yes | 列表卡片簡短介紹 |
 | `about` | yes | 關於民宿段落 |
 | `coverImage` | yes | 列表卡片主圖 URL |
