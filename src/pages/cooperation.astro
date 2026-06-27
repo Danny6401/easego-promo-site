@@ -1,23 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import cooperationData from "../data/cooperation-homestays.json";
+import { imageAssets, sitePath } from "../data/assets.js";
+import { getAllHomestays, getRegions } from "../data/cooperation.js";
+import { pageMeta } from "../data/site-content.js";
 
-const baseUrl = import.meta.env.BASE_URL.endsWith("/")
-	? import.meta.env.BASE_URL
-	: `${import.meta.env.BASE_URL}/`;
-const regions = cooperationData.regions;
-const logoUrl = `${baseUrl}easegoLogo.png`;
-const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
-const regionUrl = (id) => `${baseUrl}cooperation/region/${id}/`;
-const allHomestays = regions.flatMap((region) => region.homestays);
+const regions = getRegions();
+const logoUrl = imageAssets.logo;
+const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
+const regionUrl = (id) => sitePath(`cooperation/region/${id}/`);
+const allHomestays = getAllHomestays();
 ---
 
 <Layout
-	title="Easego 合作旅宿｜精選合作旅宿列表"
-	description="瀏覽 Easego 聯合行銷合作旅宿，依地區探索精選民宿、旅宿特色、房型資訊與訂房連結。"
+	title={pageMeta.cooperation.title}
+	description={pageMeta.cooperation.description}
 >
 	<header class="site-header">
-		<a class="brand" href={baseUrl} aria-label="回到首頁">
+		<a class="brand" href={sitePath()} aria-label="回到首頁">
 			<img class="brand-logo" src={logoUrl} alt="Easego" />
 			<span>Easego 合作旅宿</span>
 		</a>

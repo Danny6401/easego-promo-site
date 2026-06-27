@@ -1,58 +1,49 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import cooperationData from "../../data/cooperation-homestays.json";
-
-const regions = cooperationData.regions;
+import {
+	externalIconUrls,
+	sitePath,
+} from "../../data/assets.js";
+import {
+	getFeaturedHomestay,
+	getHomestayBySlug,
+	getHomestayStaticPaths,
+} from "../../data/cooperation.js";
+import { getHomestayNavItems, pageMeta } from "../../data/site-content.js";
 
 export function getStaticPaths() {
-	const allHomestays = cooperationData.regions.flatMap((region) =>
-		region.homestays.map((homestay) => homestay),
-	);
-
-	return allHomestays.map((homestay) => ({
-		params: { slug: homestay.slug },
-	}));
+	return getHomestayStaticPaths();
 }
 
-const baseUrl = import.meta.env.BASE_URL.endsWith("/")
-	? import.meta.env.BASE_URL
-	: `${import.meta.env.BASE_URL}/`;
-const listUrl = `${baseUrl}cooperation/`;
-const allHomestays = regions.flatMap((region) =>
-	region.homestays.map((homestay) => ({
-		...homestay,
-		regionId: region.id,
-		regionLabel: region.label,
-	})),
-);
-const featuredHomestay =
-	allHomestays.find((homestay) => homestay.slug === Astro.params.slug) ?? allHomestays[0];
+const listUrl = sitePath("cooperation/");
+const featuredHomestay = getHomestayBySlug(Astro.params.slug) ?? getFeaturedHomestay();
 
-const navItems = [
-	{ label: "最新消息", href: "#news" },
-	{ label: "關於我們", href: "#about" },
-	{ label: "客房介紹", href: "#rooms" },
-	{ label: "訂房資訊", href: "#booking" },
-	{ label: "民宿位置", href: "#location" },
-	{ label: "回列表", href: listUrl },
-];
+const navItems = getHomestayNavItems(listUrl);
 
 const slides = featuredHomestay.slides;
 const rooms = featuredHomestay.rooms;
 const news = featuredHomestay.news;
 const bookingRows = featuredHomestay.bookingRows;
 const bookingNotices = featuredHomestay.bookingNotices;
+const homestayMeta = pageMeta.homestay(featuredHomestay);
 const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
 const addressMapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
 	featuredHomestay.address,
 )}&output=embed`;
 const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
+const detailImageVars = [
+	`--about-photo-fallback: url('${featuredHomestay.detailImages?.aboutFallback}')`,
+	`--booking-panel-bg: url('${featuredHomestay.detailImages?.bookingPanel}')`,
+	`--map-card-bg: url('${featuredHomestay.detailImages?.mapCard}')`,
+].join("; ");
+const hasUsableLink = (href) => Boolean(href && href.trim() && href.trim() !== "#");
+const links = featuredHomestay.links ?? {};
 ---
 
 <Layout
-	title={`${featuredHomestay.name}｜Easego 合作旅宿`}
-	description={featuredHomestay.summary}
-	image={featuredHomestay.coverImage}
+	title={homestayMeta.title}
+	description={homestayMeta.description}
+	image={homestayMeta.image}
 >
 	<header class="site-header">
 		<a class="brand" href="#top" aria-label="回到首頁">
@@ -77,7 +68,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 		</nav>
 	</header>
 
-	<main id="top">
+	<main id="top" style={detailImageVars}>
 		<section class="hero" aria-label="homestay hero slider">
 			<div class="hero-slider" data-slider>
 				{
@@ -122,27 +113,27 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 				</button>
 				<div class="sidebox-section sidebox-reserve">
 					<p>快速訂房</p>
-					<a class="sidebox-button" href="#booking">Reserve</a>
+					<a class="sidebox-button" href={links.reserve} hidden={!hasUsableLink(links.reserve)}>Reserve</a>
 				</div>
 				<div class="sidebox-section">
 					<div class="sidebox-icons" aria-label="訂房平台連結">
-						<a href={featuredHomestay.links.booking} aria-label="Booking.com">
+						<a href={links.booking} aria-label="Booking.com" hidden={!hasUsableLink(links.booking)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=booking.com"
+								src={externalIconUrls.booking}
 								alt=""
 								loading="lazy"
 							/>
 						</a>
-						<a href={featuredHomestay.links.agoda} aria-label="Agoda">
+						<a href={links.agoda} aria-label="Agoda" hidden={!hasUsableLink(links.agoda)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=agoda.com"
+								src={externalIconUrls.agoda}
 								alt=""
 								loading="lazy"
 							/>
 						</a>
-						<a href={featuredHomestay.links.eztravel} aria-label="ezTravel">
+						<a href={links.eztravel} aria-label="ezTravel" hidden={!hasUsableLink(links.eztravel)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw"
+								src={externalIconUrls.eztravel}
 								alt=""
 								loading="lazy"
 							/>
@@ -151,23 +142,23 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 				</div>
 				<div class="sidebox-section">
 					<div class="sidebox-icons" aria-label="social links">
-						<a href={featuredHomestay.links.facebook} aria-label="Facebook">
+						<a href={links.facebook} aria-label="Facebook" hidden={!hasUsableLink(links.facebook)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com"
+								src={externalIconUrls.facebook}
 								alt=""
 								loading="lazy"
 							/>
 						</a>
-						<a href={featuredHomestay.links.instagram} aria-label="Instagram">
+						<a href={links.instagram} aria-label="Instagram" hidden={!hasUsableLink(links.instagram)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=instagram.com"
+								src={externalIconUrls.instagram}
 								alt=""
 								loading="lazy"
 							/>
 						</a>
-						<a href={featuredHomestay.links.line} aria-label="LINE">
+						<a href={links.line} aria-label="LINE" hidden={!hasUsableLink(links.line)}>
 							<img
-								src="https://www.google.com/s2/favicons?sz=64&domain=line.me"
+								src={externalIconUrls.line}
 								alt=""
 								loading="lazy"
 							/>
@@ -205,7 +196,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 				<div
 					class="about-photo"
 					aria-label="民宿公共空間照片"
-					style={`background-image: linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)), url('${featuredHomestay.gallery[0]}')`}
+					style={`background-image: linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)), url('${featuredHomestay.aboutImage}')`}
 				></div>
 				<div class="section-copy">
 					<p class="eyebrow">About</p>
@@ -1006,7 +997,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 
 	.sidebox-icons {
 		display: flex;
-		justify-content: space-between;
+		justify-content: center;
 		gap: 7px;
 		margin-top: 0;
 	}
@@ -1026,6 +1017,11 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 			background 180ms ease,
 			color 180ms ease,
 			transform 180ms ease;
+	}
+
+	.sidebox-icons a[hidden],
+	.sidebox-button[hidden] {
+		display: none !important;
 	}
 
 	.sidebox-icons a:hover {
@@ -1246,7 +1242,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 		border-radius: 8px;
 		background:
 			linear-gradient(rgba(24, 59, 55, 0.1), rgba(24, 59, 55, 0.1)),
-			url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=80")
+			var(--about-photo-fallback)
 				center / cover;
 	}
 
@@ -1392,7 +1388,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 		padding: clamp(28px, 5vw, 56px);
 		background:
 			linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
-			url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80")
+			var(--booking-panel-bg)
 				center / cover;
 	}
 
@@ -1501,6 +1497,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 
 	.section-location p {
 		color: rgba(255, 255, 255, 0.78);
+		white-space: pre-line;
 	}
 
 	.google-map {
@@ -1518,7 +1515,7 @@ const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
 		border-radius: 8px;
 		background:
 			linear-gradient(rgba(13, 31, 35, 0.16), rgba(13, 31, 35, 0.16)),
-			url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80")
+			var(--map-card-bg)
 				center / cover;
 		color: #fff;
 		text-align: center;

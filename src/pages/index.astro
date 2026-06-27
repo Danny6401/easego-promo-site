@@ -1,126 +1,49 @@
 ﻿---
 import Layout from "../layouts/Layout.astro";
-import cooperationData from "../data/cooperation-homestays.json";
+import { imageAssets, sitePath } from "../data/assets.js";
+import {
+  getAllHomestays,
+  getFeaturedHomestay,
+  getHomestayMap,
+  getRegions,
+} from "../data/cooperation.js";
+import {
+  getFeaturedPartners,
+  getHomeCases,
+  getHomeNavItems,
+  getHomeStats,
+  getRegionBadges,
+  homeContent,
+  pageMeta,
+} from "../data/site-content.js";
 
-const baseUrl = import.meta.env.BASE_URL.endsWith("/")
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
+const cooperationUrl = sitePath("cooperation/");
+const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
+const advantageIconUrl = imageAssets.advantageIcon;
+const ctaPanelUrl = imageAssets.ctaPanel;
+const logoUrl = imageAssets.logo;
+const heroMapUrl = imageAssets.heroMap;
+const regions = getRegions();
+const allHomestays = getAllHomestays();
+const navItems = getHomeNavItems();
+const regionBadges = getRegionBadges(regions);
+const stats = getHomeStats({
+  homestayCount: allHomestays.length,
+  regionCount: regionBadges.length,
+});
 
-const cooperationUrl = `${baseUrl}cooperation/`;
-const homestayUrl = (slug) => `${baseUrl}cooperation/${slug}/`;
-const advantageIconUrl = (icon) => `${baseUrl}advantage-icons/${icon}.png`;
-const ctaPanelUrl = `${baseUrl}cta-panel-transparent.png`;
-const logoUrl = `${baseUrl}easegoLogo.png`;
-const heroMapUrl = `${baseUrl}taiwan-map-hero.png`;
-const regions = cooperationData.regions;
-const allHomestays = cooperationData.regions.flatMap((region) => region.homestays);
-const regionClassNames = {
-  north: "north",
-  central: "central",
-  south: "south",
-  east: "east",
-  islands: "islands",
-  overseas: "overseas",
-};
-
-const navItems = [
-  { label: "合作旅宿", href: cooperationUrl },
-  { label: "合作優勢", href: "#advantages" },
-  { label: "成功案例", href: "#cases" },
-  { label: "加入我們", href: "#contact" },
-];
-
-const stats = [
-  { value: `${allHomestays.length}`, suffix: "+", label: "累積合作旅宿", icon: "building" },
-  { value: `${regions.length}`, suffix: "+", label: "區域合作據點", icon: "user" },
-  { value: "多平台曝光", suffix: "", label: "精準行銷推廣", icon: "megaphone" },
-];
-
-const regionBadges = regions.map((region) => ({
-  id: region.id,
-  label: region.label,
-  count: region.homestays.length,
-  className: regionClassNames[region.id] ?? region.id,
-  image: region.homestays[0]?.coverImage,
-}));
-
-const featuredPartnerSlugs = [
-  "taitung-cape-morning",
-  "jiufen-mist-house",
-  "taichung-oldtown-stay",
-  "kenting-blue-cabin",
-  "taipei-river-view-stay",
-  "yilan-rice-field-villa",
-  "penghu-coral-bay",
-];
-
-const homestaysBySlug = new Map(allHomestays.map((homestay) => [homestay.slug, homestay]));
-const partners = featuredPartnerSlugs
-  .map((slug) => homestaysBySlug.get(slug))
-  .filter(Boolean)
-  .map((homestay) => ({
-  name: homestay.name,
-  location: homestay.area,
-  rating: homestay.rating,
-  roomCount: homestay.roomCount,
-  summary: homestay.summary,
-  href: homestayUrl(homestay.slug),
-  image: homestay.coverImage,
-}));
+const homestaysBySlug = getHomestayMap();
+const featuredHomestay = getFeaturedHomestay();
+const partners = getFeaturedPartners({ homestaysBySlug, homestayUrl });
 const showPartnerControls = partners.length > 5;
 
-const advantages = [
-  { title: "多平台聯合曝光", description: "整合多元平台資源，擴大品牌能見度，精準觸及目標客群。", icon: "megaphone" },
-  { title: "精準客群導流", description: "數據驅動行銷，將對的旅客帶到你的旅宿，提升訂房轉換。", icon: "target" },
-  { title: "提升訂房率", description: "優化曝光與轉換流程，有效提升官網與平台訂房量。", icon: "growth" },
-  { title: "長期合作共贏", description: "建立穩定合作關係，互相成長，創造長期價值。", icon: "care" },
-  { title: "專人行銷支援", description: "專職行銷顧問服務，提供活動規劃與行銷建議。", icon: "headset" },
-  { title: "安心透明合作", description: "合作流程透明公開，成效數據清楚可見，安心可靠。", icon: "shield" },
-];
-
-const cases = [
-  {
-    title: "台東．海岬晨光民宿",
-    description: "透過聯合行銷推廣，平日訂房率穩定提升。",
-    image: homestaysBySlug.get("taitung-cape-morning")?.coverImage,
-    metrics: [
-      { value: "35%", label: "訂房率成長" },
-      { value: "28%", label: "官網轉換成長" },
-    ],
-  },
-  {
-    title: "台中．舊城旅舍",
-    description: "精準廣告投放，帶來更多高品質訂單。",
-    image: homestaysBySlug.get("taichung-oldtown-stay")?.coverImage,
-    metrics: [
-      { value: "42%", label: "訂房率成長" },
-      { value: "33%", label: "營收成長" },
-    ],
-  },
-  {
-    title: "墾丁．藍潮小屋",
-    description: "暑假檔期訂單爆滿，品牌聲量大幅提升。",
-    image: homestaysBySlug.get("kenting-blue-cabin")?.coverImage,
-    metrics: [
-      { value: "55%", label: "訂房率成長" },
-      { value: "41%", label: "社群互動成長" },
-    ],
-  },
-  {
-    title: "南投．杉林斜屋",
-    description: "鎖定深度旅客，淡旺季表現更趨均衡。",
-    image: homestaysBySlug.get("nantou-forest-loft")?.coverImage,
-    metrics: [
-      { value: "30%", label: "訂房率成長" },
-      { value: "25%", label: "回訪率成長" },
-    ],
-  },
-];
+const advantages = homeContent.advantages;
+const cases = getHomeCases({ homestaysBySlug, fallbackHomestay: featuredHomestay });
 ---
 
 <Layout
-  title="Easego 聯合行銷合作旅宿｜攜手共創・放大價值・一起成長"
-  description="Easego 聯合行銷整合合作旅宿、多平台曝光、精準客群導流與專人行銷支援，協助旅宿品牌提升訂房率與長期營運成效。"
+  title={pageMeta.home.title}
+  description={pageMeta.home.description}
 >
   <header class="site-header">
     <a class="brand" href="#top" aria-label="回到首頁">
@@ -185,7 +108,7 @@ const cases = [
         <div class="map-card">
           <img class="map-image" src={heroMapUrl} alt="台灣合作旅宿分布地圖" />
           {regionBadges.map((region) => (
-            <a class={`region-badge ${region.className}`} href={`${baseUrl}cooperation/region/${region.id}/`}>
+            <a class={`region-badge ${region.className}`} href={sitePath(`cooperation/region/${region.id}/`)}>
               {region.image && <img class="badge-photo" src={region.image} alt="" loading="lazy" />}
               <span class="badge-count">
                 <span>{region.label}</span>

@@ -1,0 +1,41 @@
+{
+  "featuredSlug": ["peach-holiday-manoranor", "taitung-cape-morning"],
+  "regions": [
+    {
+      "id": "north",
+      "label": "北部",
+      "description": "台北、新北、基隆、桃園、新竹與宜蘭的合作住宿。",
+      "homestaySlugs": ["peach-holiday-manoranor"]
+    },
+    {
+      "id": "central",
+      "label": "中部",
+      "description": "苗栗、台中、彰化、南投與雲林的合作住宿。",
+      "homestaySlugs": []
+    },
+    {
+      "id": "south",
+      "label": "南部",
+      "description": "嘉義、台南、高雄、屏東的合作住宿。",
+      "homestaySlugs": []
+    },
+    {
+      "id": "east",
+      "label": "東部",
+      "description": "花蓮與台東的合作住宿。",
+      "homestaySlugs": ["taitung-cape-morning"]
+    },
+    {
+      "id": "islands",
+      "label": "離島",
+      "description": "澎湖、金門、馬祖、綠島與蘭嶼的合作住宿。",
+      "homestaySlugs": []
+    },
+    {
+      "id": "overseas",
+      "label": "國外",
+      "description": "海外合作住宿，適合自由行與跨國旅遊方案。",
+      "homestaySlugs": []
+    }
+  ]
+}

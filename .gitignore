@@ -18,6 +18,9 @@ astro-dev*.log
 .env
 .env.production
 
+# R2 upload payloads
+r2/
+
 # macOS-specific files
 .DS_Store
 

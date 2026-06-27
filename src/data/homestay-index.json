@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "taitung-cape-morning",
+    "regionId": "east",
+    "name": "海岬晨光民宿",
+    "region": "東部",
+    "area": "台東成功",
+    "address": "台東縣成功鎮海岸路 88 號",
+    "summary": "台東海岸線旁的靜謐民宿，步行 5 分鐘抵達海邊。",
+    "coverImage": "taitung-cape-morning.cover",
+    "features": ["海岸步行", "在地早餐", "親子友善"],
+    "startingPrice": "NT$3,200 起",
+    "capacity": "2-18 人",
+    "roomCount": "8 間",
+    "rating": "4.9"
+  },
+  {
+    "slug": "peach-holiday-manoranor",
+    "regionId": "north",
+    "name": "水蜜桃渡假莊園",
+    "region": "北部",
+    "area": "桃園市復興區",
+    "address": "桃園市復興區華陵里8鄰巴崚30之8號",
+    "summary": "拉拉山國家森林遊樂區（神木群步道)",
+    "coverImage": "peach-holiday-manoranor.cover",
+    "features": ["拉拉山", "古道探索", "小木屋"],
+    "startingPrice": "NT$4300 起",
+    "capacity": "2-18 人",
+    "roomCount": "4 間",
+    "rating": "4.3"
+  }
+]
