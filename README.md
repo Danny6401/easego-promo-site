@@ -17,9 +17,10 @@ npm run preview
 
 ```env
 PUBLIC_R2_BASE_URL=https://你的-r2-public-domain
+PUBLIC_SITE_URL=https://你的正式網站網域
 ```
 
-部署環境也要設定同一個變數。
+部署環境也要設定同一組變數。`PUBLIC_SITE_URL` 會用在 canonical、`og:url` 與相對路徑圖片的 `og:image`。
 
 ## R2 結構
 
@@ -448,4 +449,5 @@ npm run build
 - `homestay-index.json` 的 `slug` 會決定 SEO 路由。
 - R2 detail JSON 或 images JSON 缺少時，build 會失敗。
 - `PUBLIC_R2_BASE_URL` 沒設定時，build 會失敗。
-- `.github/workflows/deploy.yml` 若有部署流程，記得在部署環境設定 `PUBLIC_R2_BASE_URL`。
+- `PUBLIC_SITE_URL` 沒設定時，canonical 與 `og:url` 可能會依 build 環境變成 localhost 或平台暫存網址。
+- `.github/workflows/deploy.yml` 若有部署流程，記得在部署環境設定 `PUBLIC_R2_BASE_URL` 與 `PUBLIC_SITE_URL`。

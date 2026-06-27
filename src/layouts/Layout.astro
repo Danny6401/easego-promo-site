@@ -8,8 +8,10 @@ const {
 	image = imageAssets.logo,
 } = Astro.props;
 
-const canonicalUrl = Astro.url.href;
-const metaImage = image.startsWith("http") ? image : new URL(image, Astro.site ?? Astro.url).toString();
+const siteUrl = import.meta.env.PUBLIC_SITE_URL?.replace(/\/+$/, "") ?? Astro.site?.toString().replace(/\/+$/, "");
+const canonicalBaseUrl = siteUrl ? new URL(siteUrl) : Astro.url;
+const canonicalUrl = new URL(Astro.url.pathname, canonicalBaseUrl).toString();
+const metaImage = image.startsWith("http") ? image : new URL(image, canonicalBaseUrl).toString();
 ---
 
 <!doctype html>
