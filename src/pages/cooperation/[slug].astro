@@ -138,6 +138,13 @@ const links = featuredHomestay.links ?? {};
 								loading="lazy"
 							/>
 						</a>
+						<a href={links.trip} aria-label="Trip.com" hidden={!hasUsableLink(links.trip)}>
+							<img
+								src={externalIconUrls.trip}
+								alt=""
+								loading="lazy"
+							/>
+						</a>
 					</div>
 				</div>
 				<div class="sidebox-section">

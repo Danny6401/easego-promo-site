@@ -92,6 +92,7 @@ export const externalIconUrls = {
 	booking: "https://www.google.com/s2/favicons?sz=64&domain=booking.com",
 	agoda: "https://www.google.com/s2/favicons?sz=64&domain=agoda.com",
 	eztravel: "https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw",
+	trip: "https://www.google.com/s2/favicons?sz=64&domain=trip.com",
 	facebook: "https://www.google.com/s2/favicons?sz=64&domain=facebook.com",
 	instagram: "https://www.google.com/s2/favicons?sz=64&domain=instagram.com",
 	line: "https://www.google.com/s2/favicons?sz=64&domain=line.me",
