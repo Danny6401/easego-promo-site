@@ -1,20 +1,5 @@
 [
   {
-    "slug": "taitung-cape-morning",
-    "regionId": "east",
-    "name": "海岬晨光民宿",
-    "region": "東部",
-    "area": "台東成功",
-    "address": "台東縣成功鎮海岸路 88 號",
-    "summary": "台東海岸線旁的靜謐民宿，步行 5 分鐘抵達海邊。",
-    "coverImage": "taitung-cape-morning.cover",
-    "features": ["海岸步行", "在地早餐", "親子友善"],
-    "startingPrice": "NT$3,200 起",
-    "capacity": "2-18 人",
-    "roomCount": "8 間",
-    "rating": "4.9"
-  },
-  {
     "slug": "peach-holiday-manoranor",
     "regionId": "north",
     "name": "水蜜桃渡假莊園",
@@ -28,5 +13,20 @@
     "capacity": "2-18 人",
     "roomCount": "4 間",
     "rating": "4.3"
+  },
+  {
+    "slug": "jiufen-light-travel",
+    "regionId": "north",
+    "name": "九份輕旅",
+    "region": "北部",
+    "area": "新北市瑞芳區",
+    "address": "新北市瑞芳區福住里佛堂巷20號",
+    "summary": "隱身於九份老街的後段，距離熱鬧的街區僅約 200 公尺。鬧中取靜的地理位置與得天獨厚的清幽環境，讓這裡成為避開喧囂的山城秘境。",
+    "coverImage": "jiufen-light-travel.cover",
+    "features": ["九份老街", "山城秘境", "頌德公園"],
+    "startingPrice": "NT$2200 起",
+    "capacity": "2-18 人",
+    "roomCount": "5 間",
+    "rating": "5.0"
   }
 ]
