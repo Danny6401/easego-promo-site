@@ -36,7 +36,7 @@ export const homeContent = {
     islands: "islands",
     overseas: "overseas",
   },
-  featuredPartnerSlugs: ["peach-holiday-manoranor", "jiufen-light-travel"],
+  featuredPartnerSlugs: ["peach-holiday-manoranor", "jiufen-light-travel", "siban-bnb"],
   caseItems: [
     {
       slug: "peach-holiday-manoranor",

@@ -28,5 +28,20 @@
     "capacity": "2-18 人",
     "roomCount": "5 間",
     "rating": "5.0"
+  },
+  {
+    "slug": "siban-bnb",
+    "regionId": "north",
+    "name": "溪邊小築",
+    "region": "北部",
+    "area": "新北市瑞芳區",
+    "address": "新北市瑞芳區祈堂路133號",
+    "summary": "溪邊小築依山傍溪而建，這裡沒有城市的喧囂，只有潺潺的溪流聲、繚繞的雲霧，我們深信，旅行最奢侈的享受，是找回與自然共處的慢節奏。",
+    "coverImage": "siban-bnb.cover",
+    "features": ["金瓜石", "黃金博物館", "濱海公路"],
+    "startingPrice": "NT$2000 起",
+    "capacity": "2-17 人",
+    "roomCount": "5 間",
+    "rating": "4.2"
   }
 ]
