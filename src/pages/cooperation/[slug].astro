@@ -9,6 +9,7 @@ import {
 	getHomestayBySlug,
 	getHomestayStaticPaths,
 } from "../../data/cooperation.js";
+import { buildHomestaySchema } from "../../data/schema.js";
 import { getHomestayNavItems, pageMeta } from "../../data/site-content.js";
 
 export function getStaticPaths() {
@@ -38,12 +39,18 @@ const detailImageVars = [
 ].join("; ");
 const hasUsableLink = (href) => Boolean(href && href.trim() && href.trim() !== "#");
 const links = featuredHomestay.links ?? {};
+const structuredData = buildHomestaySchema({
+	title: homestayMeta.title,
+	description: homestayMeta.description,
+	homestay: featuredHomestay,
+});
 ---
 
 <Layout
 	title={homestayMeta.title}
 	description={homestayMeta.description}
 	image={homestayMeta.image}
+	structuredData={structuredData}
 >
 	<header class="site-header">
 		<a class="brand" href="#top" aria-label="回到首頁">

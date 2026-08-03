@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { imageAssets, sitePath } from "../data/assets.js";
 import { getAllHomestays, getRegions } from "../data/cooperation.js";
+import { buildCooperationListSchema } from "../data/schema.js";
 import { pageMeta } from "../data/site-content.js";
 
 const regions = getRegions();
@@ -9,11 +10,17 @@ const logoUrl = imageAssets.logo;
 const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
 const regionUrl = (id) => sitePath(`cooperation/region/${id}/`);
 const allHomestays = getAllHomestays();
+const structuredData = buildCooperationListSchema({
+	title: pageMeta.cooperation.title,
+	description: pageMeta.cooperation.description,
+	homestays: allHomestays,
+});
 ---
 
 <Layout
 	title={pageMeta.cooperation.title}
 	description={pageMeta.cooperation.description}
+	structuredData={structuredData}
 >
 	<header class="site-header">
 		<a class="brand" href={sitePath()} aria-label="回到首頁">

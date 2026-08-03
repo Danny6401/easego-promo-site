@@ -6,12 +6,23 @@ const {
 	title = pageMeta.default.title,
 	description = pageMeta.default.description,
 	image = imageAssets.logo,
+	structuredData = null,
 } = Astro.props;
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL?.replace(/\/+$/, "") ?? Astro.site?.toString().replace(/\/+$/, "");
 const canonicalBaseUrl = siteUrl ? new URL(siteUrl) : Astro.url;
 const canonicalUrl = new URL(Astro.url.pathname, canonicalBaseUrl).toString();
 const metaImage = image.startsWith("http") ? image : new URL(image, canonicalBaseUrl).toString();
+const schemaContext = {
+	siteUrl: canonicalBaseUrl.toString().replace(/\/+$/, ""),
+	canonicalUrl,
+	metaImage,
+};
+const structuredDataValue =
+	typeof structuredData === "function" ? structuredData(schemaContext) : structuredData;
+const structuredDataJson = structuredDataValue
+	? JSON.stringify(structuredDataValue).replace(/</g, "\\u003c")
+	: "";
 ---
 
 <!doctype html>
@@ -36,6 +47,11 @@ const metaImage = image.startsWith("http") ? image : new URL(image, canonicalBas
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={metaImage} />
+		{
+			structuredDataJson && (
+				<script type="application/ld+json" set:html={structuredDataJson} />
+			)
+		}
 	</head>
 	<body>
 		<slot />

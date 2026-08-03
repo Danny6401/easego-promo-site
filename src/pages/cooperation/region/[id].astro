@@ -6,6 +6,7 @@ import {
 	getRegions,
 	getRegionStaticPaths,
 } from "../../../data/cooperation.js";
+import { buildRegionSchema } from "../../../data/schema.js";
 import { pageMeta } from "../../../data/site-content.js";
 
 const regions = getRegions();
@@ -19,11 +20,17 @@ const listUrl = sitePath("cooperation/");
 const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
 const currentRegion = getRegionById(Astro.params.id);
 const currentMeta = pageMeta.region(currentRegion);
+const structuredData = buildRegionSchema({
+	title: currentMeta.title,
+	description: currentMeta.description,
+	region: currentRegion,
+});
 ---
 
 <Layout
 	title={currentMeta.title}
 	description={currentMeta.description}
+	structuredData={structuredData}
 >
 	<header class="site-header">
 		<a class="brand" href={sitePath()} aria-label="回到首頁">
