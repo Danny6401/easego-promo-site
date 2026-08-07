@@ -93,6 +93,8 @@ export const externalIconUrls = {
 	agoda: "https://www.google.com/s2/favicons?sz=64&domain=agoda.com",
 	eztravel: "https://www.google.com/s2/favicons?sz=64&domain=eztravel.com.tw",
 	trip: "https://www.google.com/s2/favicons?sz=64&domain=trip.com",
+	website:
+		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23333333' stroke-width='4.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='26' cy='26' r='22.5'/%3E%3Cpath d='M3.5 26h45M26 3.5v45M10 14h32M10 38h32M26 3.5c-8 7-12 15-12 22.5s4 15.5 12 22.5M26 3.5c8 7 12 15 12 22.5 0 4.5-1.2 8.6-3.6 12.5'/%3E%3C/g%3E%3Cpath d='M34 32l27 12-11 4-4 12-12-28z' fill='%23333333' stroke='%23ffffff' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E",
 	facebook: "https://www.google.com/s2/favicons?sz=64&domain=facebook.com",
 	instagram: "https://www.google.com/s2/favicons?sz=64&domain=instagram.com",
 	line: "https://www.google.com/s2/favicons?sz=64&domain=line.me",

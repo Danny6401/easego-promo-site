@@ -16,6 +16,38 @@ const fetchJson = async (url) => {
 	return response.json();
 };
 
+const getOptionalText = (value, fallback) =>
+	typeof value === "string" && value.trim() ? value.trim() : fallback;
+
+const getCollectionItems = (value, key) => {
+	if (Array.isArray(value)) {
+		return value;
+	}
+
+	return value?.[key] ?? value?.items ?? [];
+};
+
+const getCollectionTitle = (value, fallback) =>
+	getOptionalText(Array.isArray(value) ? undefined : value?.title, fallback);
+
+const normalizeHomestaySections = (homestay) => {
+	const roomsSource = homestay.rooms;
+	const bookingRowsSource = homestay.bookingRows;
+
+	// rooms / bookingRows 新格式可包 title，這裡轉回既有陣列結構供頁面共用。
+	return {
+		...homestay,
+		rooms: getCollectionItems(roomsSource, "items"),
+		bookingRows: getCollectionItems(bookingRowsSource, "rows"),
+		location: homestay.location ?? {},
+		sectionTitles: {
+			rooms: getCollectionTitle(roomsSource, "客房介紹"),
+			booking: getCollectionTitle(bookingRowsSource, "訂房資訊"),
+			location: getOptionalText(homestay.location?.title, "民宿位置"),
+		},
+	};
+};
+
 const homestayDetailsBySlug = new Map(
 	await Promise.all(
 		homestayIndex.map(async ({ slug }) => [
@@ -37,10 +69,10 @@ const homestayImagesBySlug = new Map(
 const homestaysBySlug = new Map(
 	homestayIndex.map((homestay) => [
 		homestay.slug,
-		{
+		normalizeHomestaySections({
 			...(homestayDetailsBySlug.get(homestay.slug) ?? {}),
 			...homestay,
-		},
+		}),
 	]),
 );
 

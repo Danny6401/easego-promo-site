@@ -19,7 +19,8 @@ export function getStaticPaths() {
 const listUrl = sitePath("cooperation/");
 const featuredHomestay = getHomestayBySlug(Astro.params.slug) ?? getFeaturedHomestay();
 
-const navItems = getHomestayNavItems(listUrl);
+const sectionTitles = featuredHomestay.sectionTitles;
+const navItems = getHomestayNavItems(listUrl, sectionTitles);
 
 const slides = featuredHomestay.slides;
 const rooms = featuredHomestay.rooms;
@@ -88,7 +89,7 @@ const structuredData = buildHomestaySchema({
 								<p class="eyebrow">{featuredHomestay.englishName}</p>
 								<h1>{slide.title}</h1>
 								<p>{slide.subtitle}</p>
-								<a class="hero-action" href="#booking">查看訂房資訊</a>
+								<a class="hero-action" href="#booking">查看{sectionTitles.booking}</a>
 							</div>
 						</article>
 					))
@@ -156,6 +157,14 @@ const structuredData = buildHomestaySchema({
 				</div>
 				<div class="sidebox-section">
 					<div class="sidebox-icons" aria-label="social links">
+						<a href={links.website} aria-label="官方網站" hidden={!hasUsableLink(links.website)}>
+							<img
+								class="website-icon"
+								src={externalIconUrls.website}
+								alt=""
+								loading="lazy"
+							/>
+						</a>
 						<a href={links.facebook} aria-label="Facebook" hidden={!hasUsableLink(links.facebook)}>
 							<img
 								src={externalIconUrls.facebook}
@@ -234,7 +243,7 @@ const structuredData = buildHomestaySchema({
 			<div class="section-inner">
 				<div class="section-heading">
 					<p class="eyebrow">Rooms</p>
-					<h2>客房介紹</h2>
+					<h2>{sectionTitles.rooms}</h2>
 				</div>
 				<div class="room-grid">
 					{
@@ -286,7 +295,7 @@ const structuredData = buildHomestaySchema({
 			<div class="booking-panel">
 				<div>
 					<p class="eyebrow">Booking</p>
-					<h2>訂房資訊</h2>
+					<h2>{sectionTitles.booking}</h2>
 					<div class="booking-list">
 						{
 							bookingRows.map((row) => (
@@ -333,7 +342,7 @@ const structuredData = buildHomestaySchema({
 			<div class="location-content">
 				<div>
 					<p class="eyebrow">Location</p>
-					<h2>民宿位置</h2>
+					<h2>{sectionTitles.location}</h2>
 					<p>{featuredHomestay.location.description}</p>
 					<p>{featuredHomestay.location.transport}</p>
 				</div>
@@ -1056,6 +1065,12 @@ const structuredData = buildHomestaySchema({
 		transition:
 			filter 180ms ease,
 			opacity 180ms ease;
+	}
+
+	.sidebox-icons .website-icon {
+		width: 28px;
+		height: 28px;
+		transform: translate(1px, 1px);
 	}
 
 	.sidebox-icons a:hover img {

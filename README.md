@@ -248,14 +248,14 @@ wrangler r2 object put easego-assets/homestays/taitung-cape-morning/detail.json 
 | `googleMapEmbedUrl` | 否 | Google Maps iframe embed URL。可留空字串，程式會用 `homestay-index.json` 的 `address` 自動產生地圖查詢。 |
 | `about` | 是 | 「關於」區塊的民宿介紹長文。 |
 | `stats` | 是 | 「關於」區塊下方的三個統計數字，例如步行時間、房間數、評分。 |
-| `bookingRows` | 是 | 「訂房資訊」左側表格，例如入住時間、退房時間、付款方式、聯絡方式。 |
+| `bookingRows` | 是 | 「訂房資訊」左側表格，例如入住時間、退房時間、付款方式、聯絡方式。可維持原本陣列格式；若要自訂區塊標題，可改成物件並加入 `title` 與 `rows`。 |
 | `bookingNotices` | 是 | 「訂房資訊」右側注意事項清單。超過 4 筆時頁面會收合。 |
 | `contact` | 是 | 聯絡資訊，包含 `phone`、`line`、`email`。 |
-| `links` | 是 | 側邊浮動按鈕的連結，包含 `reserve`、`booking`、`agoda`、`eztravel`、`facebook`、`instagram`、`line`。填空字串或 `#` 時不顯示該按鈕或圖示；`reserve` 控制 Reserve 按鈕，要連到頁面訂房區塊可填 `#booking`，要連外部訂房頁就填完整 URL。 |
+| `links` | 是 | 側邊浮動按鈕的連結，包含 `reserve`、`booking`、`agoda`、`eztravel`、`website`、`facebook`、`instagram`、`line`。填空字串或 `#` 時不顯示該按鈕或圖示；`reserve` 控制 Reserve 按鈕，要連到頁面訂房區塊可填 `#booking`，要連外部訂房頁就填完整 URL。 |
 | `slides` | 是 | 詳細頁最上方 hero 輪播文字。`image` 可填 asset key，實際圖片由 `images.json.slides` 覆蓋。 |
 | `news` | 是 | 「最新消息」卡片資料。`date` 用 `YYYY-MM-DD`，`displayDate` 是畫面顯示文字。 |
-| `rooms` | 是 | 「客房介紹」房型資料。每筆包含 `name`、`price`、`images`、`description`。實際房型圖片由 `images.json.rooms` 覆蓋。 |
-| `location` | 是 | 「民宿位置」文字資料，包含 `label`、`description`、`transport`、`mapTitle`、`mapImage`。 |
+| `rooms` | 是 | 「客房介紹」房型資料。每筆包含 `name`、`price`、`images`、`description`。可維持原本陣列格式；若要自訂區塊標題，可改成物件並加入 `title` 與 `items`。實際房型圖片由 `images.json.rooms` 覆蓋。 |
+| `location` | 是 | 「民宿位置」文字資料，包含 `label`、`description`、`transport`、`mapTitle`、`mapImage`；可選填 `title` 自訂區塊標題。 |
 
 `location.description` 和 `location.transport` 可以用 `\n` 換行：
 

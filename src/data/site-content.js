@@ -167,11 +167,11 @@ export const getHomeCases = ({ homestaysBySlug, fallbackHomestay }) => {
   ];
 };
 
-export const getHomestayNavItems = (listUrl) => [
+export const getHomestayNavItems = (listUrl, sectionTitles = {}) => [
   { label: "最新消息", href: "#news" },
   { label: "關於我們", href: "#about" },
-  { label: "客房介紹", href: "#rooms" },
-  { label: "訂房資訊", href: "#booking" },
-  { label: "民宿位置", href: "#location" },
+  { label: sectionTitles.rooms ?? "客房介紹", href: "#rooms" },
+  { label: sectionTitles.booking ?? "訂房資訊", href: "#booking" },
+  { label: sectionTitles.location ?? "民宿位置", href: "#location" },
   { label: "回列表", href: listUrl },
 ];
