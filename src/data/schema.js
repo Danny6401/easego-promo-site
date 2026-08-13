@@ -51,6 +51,34 @@ const parseStartingPrice = (value) => {
 	return amount ? Number(amount) : undefined;
 };
 
+const parsePositiveInteger = (value) => {
+	const amount = String(value ?? "")
+		.match(/\d[\d,]*/)?.[0]
+		?.replace(/,/g, "");
+	const numberValue = amount ? Number(amount) : undefined;
+
+	return Number.isInteger(numberValue) && numberValue > 0 ? numberValue : undefined;
+};
+
+const buildAggregateRating = (homestay) => {
+	const ratingValue = homestay.rating ? Number(homestay.rating) : undefined;
+	const ratingCount = parsePositiveInteger(homestay.ratingCount);
+	const reviewCount = parsePositiveInteger(homestay.reviewCount);
+
+	if (!ratingValue || (!ratingCount && !reviewCount)) {
+		return undefined;
+	}
+
+	// Google 複合式搜尋結果要求 AggregateRating 必須搭配真實的 ratingCount 或 reviewCount。
+	return compactObject({
+		"@type": "AggregateRating",
+		ratingValue,
+		bestRating: "5",
+		ratingCount,
+		reviewCount,
+	});
+};
+
 const graphDocument = (items) => ({
 	"@context": "https://schema.org",
 	"@graph": items.filter(Boolean).map(compactObject),
@@ -255,13 +283,7 @@ export const buildHomestaySchema = ({ title, description, homestay }) => (contex
 						addressCountry: "TW",
 					}
 				: undefined,
-			aggregateRating: homestay.rating
-				? {
-						"@type": "AggregateRating",
-						ratingValue: homestay.rating,
-						bestRating: "5",
-					}
-				: undefined,
+			aggregateRating: buildAggregateRating(homestay),
 			amenityFeature: homestay.features?.map((feature) => ({
 				"@type": "LocationFeatureSpecification",
 				name: feature,

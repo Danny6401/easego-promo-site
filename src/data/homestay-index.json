@@ -12,7 +12,8 @@
     "startingPrice": "NT$4300 起",
     "capacity": "2-18 人",
     "roomCount": "4 間",
-    "rating": "4.3"
+    "rating": "4.3",
+    "reviewCount": 29
   },
   {
     "slug": "jiufen-light-travel",
@@ -27,7 +28,8 @@
     "startingPrice": "NT$2200 起",
     "capacity": "2-18 人",
     "roomCount": "5 間",
-    "rating": "5.0"
+    "rating": "5.0",
+    "reviewCount": 141
   },
   {
     "slug": "siban-bnb",
@@ -42,6 +44,7 @@
     "startingPrice": "NT$2000 起",
     "capacity": "2-17 人",
     "roomCount": "5 間",
-    "rating": "4.2"
+    "rating": "4.2",
+    "reviewCount": 167
   }
 ]
