@@ -1,11 +1,11 @@
 {
-  "featuredSlug": ["peach-holiday-manoranor", "jiufen-light-travel", "siban-bnb"],
+  "featuredSlug": ["peach-holiday-manoranor", "jiufen-light-travel", "siban-bnb", "brookview-ecological-fram"],
   "regions": [
     {
       "id": "north",
       "label": "北部",
       "description": "台北、新北、基隆、桃園、新竹與宜蘭的合作住宿。",
-      "homestaySlugs": ["peach-holiday-manoranor", "jiufen-light-travel", "siban-bnb"]
+      "homestaySlugs": ["peach-holiday-manoranor", "jiufen-light-travel", "siban-bnb", "brookview-ecological-fram"]
     },
     {
       "id": "central",

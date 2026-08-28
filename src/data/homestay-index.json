@@ -25,7 +25,7 @@
     "summary": "隱身於九份老街的後段，距離熱鬧的街區僅約 200 公尺。鬧中取靜的地理位置與得天獨厚的清幽環境，讓這裡成為避開喧囂的山城秘境。",
     "coverImage": "jiufen-light-travel.cover",
     "features": ["九份老街", "山城秘境", "頌德公園"],
-    "startingPrice": "NT$2200 起",
+    "startingPrice": "NT$2500 起",
     "capacity": "2-18 人",
     "roomCount": "5 間",
     "rating": "5.0",
@@ -46,5 +46,21 @@
     "roomCount": "5 間",
     "rating": "4.2",
     "reviewCount": 167
+  },
+  {
+    "slug": "brookview-ecological-fram",
+    "regionId": "north",
+    "name": "溪景生態農莊",
+    "region": "北部",
+    "area": "桃園市復興區",
+    "address": "桃園市復興區華陵村11鄰180-2號",
+    "summary": "坐落於海拔 850 至 900 公尺的巴陵山巒間，我們為您打造遠離城市喧囂的避世木屋，在這裡，您可以枕著清溪入夢、迎著山嵐晨曦甦醒。莊園不僅擁有景觀花園，更是寵物友善民宿，歡迎帶著毛小孩一同走進大自然，享受如家一般溫馨舒適的慢活時光。",
+    "coverImage": "brookview-ecological-fram.cover",
+    "features": ["拉拉山", "寵物友善", "小木屋"],
+    "startingPrice": "NT$4300 起",
+    "capacity": "2-24 人",
+    "roomCount": "12 間",
+    "rating": "4.3",
+    "reviewCount": 344
   }
 ]
