@@ -29,10 +29,14 @@ const bookingRows = featuredHomestay.bookingRows;
 const bookingNotices = featuredHomestay.bookingNotices;
 const homestayMeta = pageMeta.homestay(featuredHomestay);
 const fallbackAvatarText = featuredHomestay.name?.trim().charAt(0) ?? "";
-const addressMapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
-	featuredHomestay.address,
-)}&output=embed`;
-const mapEmbedUrl = featuredHomestay.googleMapEmbedUrl || addressMapEmbedUrl;
+const addressText = featuredHomestay.address?.trim() ?? "";
+const googleMapEmbedUrl = featuredHomestay.googleMapEmbedUrl?.trim() ?? "";
+// 沒有明確 Google Map 或地址時，改顯示 location.mapImage，避免空查詢嵌入世界地圖。
+const addressMapEmbedUrl = addressText
+	? `https://maps.google.com/maps?q=${encodeURIComponent(addressText)}&output=embed`
+	: "";
+const mapEmbedUrl = googleMapEmbedUrl || addressMapEmbedUrl;
+const mapImage = featuredHomestay.location.mapImage?.trim() ?? "";
 const detailImageVars = [
 	`--about-photo-fallback: url('${featuredHomestay.detailImages?.aboutFallback}')`,
 	`--booking-panel-bg: url('${featuredHomestay.detailImages?.bookingPanel}')`,
@@ -346,14 +350,25 @@ const structuredData = buildHomestaySchema({
 					<p>{featuredHomestay.location.description}</p>
 					<p>{featuredHomestay.location.transport}</p>
 				</div>
-				<iframe
-					class="google-map"
-					src={mapEmbedUrl}
-					title={`${featuredHomestay.name} Google Map`}
-					loading="lazy"
-					allowfullscreen
-					referrerpolicy="no-referrer-when-downgrade"
-				></iframe>
+				{
+					mapEmbedUrl ? (
+						<iframe
+							class="google-map"
+							src={mapEmbedUrl}
+							title={`${featuredHomestay.name} Google Map`}
+							loading="lazy"
+							allowfullscreen
+							referrerpolicy="no-referrer-when-downgrade"
+						></iframe>
+					) : mapImage ? (
+						<img
+							class="google-map"
+							src={mapImage}
+							alt={featuredHomestay.location.mapTitle}
+							loading="lazy"
+						/>
+					) : null
+				}
 			</div>
 		</section>
 	</main>
@@ -1536,6 +1551,7 @@ const structuredData = buildHomestaySchema({
 		min-height: 360px;
 		border: 0;
 		border-radius: 8px;
+		object-fit: cover;
 	}
 
 	.map-card {
