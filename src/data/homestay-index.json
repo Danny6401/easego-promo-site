@@ -62,5 +62,20 @@
     "roomCount": "12 間",
     "rating": "4.3",
     "reviewCount": 344
+  },
+  {
+    "slug": "flower-duke-duck",
+    "regionId": "north",
+    "name": "杜達客花藝設計",
+    "region": "北部",
+    "area": "基隆市",
+    "address": "基隆市某某區",
+    "summary": "杜達客花藝由榮獲花博國際銅牌、具荷蘭DFA講師資格的江姝葶老師創立，深耕花藝逾二十五載，為每位客戶量身打造獨一無二的空間敘事，也曾總策劃多位名流婚禮 ，專注於為每位新人打造獨一無二婚禮空間與商業空間統籌。",
+    "coverImage": "flower-duke-duck.cover",
+    "features": ["拉拉山", "寵物友善", "小木屋"],
+    "startingPrice": "NT$800 起",
+    "capacity": "訂製花束",
+    "roomCount": "",
+    "rating": ""
   }
 ]
