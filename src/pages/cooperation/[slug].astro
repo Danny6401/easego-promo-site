@@ -16,7 +16,9 @@ export function getStaticPaths() {
 	return getHomestayStaticPaths();
 }
 
-const listUrl = sitePath("cooperation/");
+const primarySiteUrl = import.meta.env.PUBLIC_PRIMARY_SITE_URL?.replace(/\/+$/, "") ?? "https://easegotech.com";
+// Keep the list link on the main EaseGo domain when this page is served from a custom domain.
+const listUrl = `${primarySiteUrl}${sitePath("cooperation/")}`;
 const featuredHomestay = getHomestayBySlug(Astro.params.slug) ?? getFeaturedHomestay();
 
 const sectionTitles = featuredHomestay.sectionTitles;

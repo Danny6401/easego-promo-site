@@ -5,6 +5,7 @@ import {
   getAllHomestays,
   getFeaturedHomestay,
   getHomestayMap,
+  getHomestayUrl,
   getRegions,
 } from "../data/cooperation.js";
 import {
@@ -19,7 +20,7 @@ import {
 import { buildHomeSchema } from "../data/schema.js";
 
 const cooperationUrl = "https://lin.ee/z6ZmWLH";
-const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
+const homestayUrl = getHomestayUrl;
 const advantageIconUrl = imageAssets.advantageIcon;
 const ctaPanelUrl = imageAssets.ctaPanel;
 const logoUrl = imageAssets.logo;

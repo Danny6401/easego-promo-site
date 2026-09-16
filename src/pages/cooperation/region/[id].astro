@@ -3,6 +3,7 @@ import Layout from "../../../layouts/Layout.astro";
 import { imageAssets, sitePath } from "../../../data/assets.js";
 import {
 	getRegionById,
+	getHomestayUrl,
 	getRegions,
 	getRegionStaticPaths,
 } from "../../../data/cooperation.js";
@@ -17,7 +18,7 @@ export function getStaticPaths() {
 
 const logoUrl = imageAssets.logo;
 const listUrl = sitePath("cooperation/");
-const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
+const homestayUrl = getHomestayUrl;
 const currentRegion = getRegionById(Astro.params.id);
 const currentMeta = pageMeta.region(currentRegion);
 const structuredData = buildRegionSchema({

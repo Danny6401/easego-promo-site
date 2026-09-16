@@ -1,13 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { imageAssets, sitePath } from "../data/assets.js";
-import { getAllHomestays, getRegions } from "../data/cooperation.js";
+import { getAllHomestays, getHomestayUrl, getRegions } from "../data/cooperation.js";
 import { buildCooperationListSchema } from "../data/schema.js";
 import { pageMeta } from "../data/site-content.js";
 
 const regions = getRegions();
 const logoUrl = imageAssets.logo;
-const homestayUrl = (slug) => sitePath(`cooperation/${slug}/`);
+const homestayUrl = getHomestayUrl;
 const regionUrl = (id) => sitePath(`cooperation/region/${id}/`);
 const allHomestays = getAllHomestays();
 const structuredData = buildCooperationListSchema({

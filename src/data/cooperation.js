@@ -2,9 +2,15 @@ import {
 	applyHomestayImages,
 	getHomestayDetailUrl,
 	getHomestayImagesUrl,
+	sitePath,
 } from "./assets.js";
 import cooperationRegions from "./cooperation-regions.json";
 import homestayIndex from "./homestay-index.json";
+
+const customDomainBySlug = new Map([
+	// 合作店家若有獨立網域，新增在這裡讓 EaseGo 列表卡片直接連到品牌網域。
+	["flower-duke-duck", "https://dukeduckflowers.com/"],
+]);
 
 const fetchJson = async (url) => {
 	const response = await fetch(url);
@@ -104,6 +110,11 @@ export const getHomestayMap = () =>
 
 export const getHomestayBySlug = (slug) =>
 	getAllHomestaysWithRegions().find((homestay) => homestay.slug === slug);
+
+export const getHomestayUrl = (slug) => {
+	// Send branded partners to their custom domains while keeping the default EaseGo detail route for others.
+	return customDomainBySlug.get(slug) ?? sitePath(`cooperation/${slug}/`);
+};
 
 export const getFeaturedHomestay = () =>
 	getHomestayBySlug(cooperationRegions.featuredSlug) ?? getAllHomestaysWithRegions()[0];
