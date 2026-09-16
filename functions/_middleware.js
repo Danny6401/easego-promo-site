@@ -1,21 +1,18 @@
-const FLOWER_DOMAIN_HOSTS = new Set([
-	"dukeduckflowers.com",
-	"www.dukeduckflowers.com",
+const customDomainRoutes = new Map([
+	// 獨立品牌網域首頁會讀取既有的合作店家詳細頁，網址列維持品牌網域。
+	["dukeduckflowers.com", "/cooperation/flower-duke-duck/"],
+	["www.dukeduckflowers.com", "/cooperation/flower-duke-duck/"],
 ]);
-
-// 獨立品牌網域首頁會讀取既有的合作店家詳細頁，網址列維持品牌網域。
-const FLOWER_DETAIL_PATH = "/cooperation/flower-duke-duck/";
 
 export async function onRequest(context) {
 	const url = new URL(context.request.url);
 	const host = url.hostname.toLowerCase();
-	const isFlowerDomain = FLOWER_DOMAIN_HOSTS.has(host);
+	const customDetailPath = customDomainRoutes.get(host);
 	const isDomainRoot = url.pathname === "/" || url.pathname === "/index.html";
 
-	// Serve the flower brand domain from the existing DuDaKe detail page without changing the visitor URL.
-	if (isFlowerDomain && isDomainRoot) {
+	if (customDetailPath && isDomainRoot) {
 		const rewriteUrl = new URL(context.request.url);
-		rewriteUrl.pathname = FLOWER_DETAIL_PATH;
+		rewriteUrl.pathname = customDetailPath;
 
 		return context.env.ASSETS.fetch(new Request(rewriteUrl, context.request));
 	}
