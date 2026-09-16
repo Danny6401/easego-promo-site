@@ -72,10 +72,26 @@
     "address": "",
     "summary": "杜達客花藝由榮獲花博國際銅牌、具荷蘭DFA講師資格的江姝葶老師創立，深耕花藝逾二十五載，為每位客戶量身打造獨一無二的空間敘事，也曾總策劃多位名流婚禮 ，專注於為每位新人打造獨一無二婚禮空間與商業空間統籌。",
     "coverImage": "flower-duke-duck.cover",
-    "features": ["拉拉山", "寵物友善", "小木屋"],
+    "features": ["花藝設計", "訂製花束", "婚禮佈置"],
     "startingPrice": "NT$800 起",
     "capacity": "訂製花束",
     "roomCount": "",
     "rating": ""
+  },
+  {
+    "slug": "happyland-bnb",
+    "regionId": "north",
+    "name": "九份喜來園景觀民宿",
+    "region": "北部",
+    "area": "新北市瑞芳區",
+    "address": "新北市瑞芳區基山里汽車路9之13號",
+    "summary": "在九份山城靜謐的巷弄角落，有一處能讓心靈歇腳的溫馨小築——喜來園景觀民宿。這裡遠離繁華街區的喧囂，卻擁有便捷的地理位置，離熱鬧的九份老街僅需幾分鐘步程。推開窗，層疊的山海景色與山城光影便迎面而來；微風吹過，帶來的是九份最純粹的舒心與寧靜。我們相信，旅行最奢華的享受，是找回與自然、與自己共處的慢節奏。",
+    "coverImage": "happyland-bnb.cover",
+    "features": ["九份老街", "山城人文藝術", "包棟民宿"],
+    "startingPrice": "NT$3000 起",
+    "capacity": "2-15 人",
+    "roomCount": "5 間",
+    "rating": "4.7",
+    "reviewCount": 297
   }
 ]
